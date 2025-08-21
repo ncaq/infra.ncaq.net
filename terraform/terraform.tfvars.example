@@ -1,0 +1,5 @@
+# Cloudflare設定の例
+# このファイルをterraform.tfvarsにコピーして実際の値を入力してください
+
+zone_id    = "your-zone-id-here"
+account_id = "your-account-id-here"
