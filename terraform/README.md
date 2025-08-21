@@ -27,6 +27,7 @@ API TokenはGitからignoreされている`.env.local`に書き込んでdirenv�
 
 ##### 編集権限
 
+- Account:Email Routing Address
 - Zone:Cache Rules
 - Zone:DNS
 - Zone:Email Routing
