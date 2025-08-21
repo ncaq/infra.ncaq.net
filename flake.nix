@@ -49,7 +49,6 @@
               opentofu # 深い意図はない。unfree警告を外すのが面倒で、まだterraform固有の機能が必要では無かっただけ。
               terraform-docs
               terraform-ls
-              terraform-providers.cloudflare
               tflint
             ];
           };
