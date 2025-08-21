@@ -4,10 +4,10 @@
 
 ## セットアップ
 
-### 1. 必要な環境変数の設定
+### 必要な環境変数の設定
 
 ```bash
-# Cloudflare API Token（必須）
+# Cloudflare API Token
 export CLOUDFLARE_API_TOKEN="your-api-token-here"
 
 # Zone IDとAccount ID
@@ -23,14 +23,7 @@ API Tokenは[Cloudflareダッシュボード](https://dash.cloudflare.com/profil
 - Zone:Page Rules:Edit
 - Zone:Firewall Services:Edit
 
-### 2. terraform.tfvarsの作成
-
-```bash
-cp terraform.tfvars.example terraform.tfvars
-# terraform.tfvarsを編集して実際の値を設定
-```
-
-### 3. 既存リソースのID取得
+### 既存リソースのID取得
 
 ```bash
 # CloudflareのリソースIDを確認
@@ -40,7 +33,7 @@ cp terraform.tfvars.example terraform.tfvars
 ZONE_ID="your-zone-id" ./get-cloudflare-ids.sh
 ```
 
-### 4. Terraformの初期化
+### Terraformの初期化
 
 ```bash
 tofu init
@@ -110,7 +103,6 @@ terraform/
 ├── variables.tf         # 変数定義
 ├── backend.tf           # 状態管理設定
 ├── import.tf            # インポート用の一時ファイル
-├── terraform.tfvars.example  # 変数値の例
 ├── get-cloudflare-ids.sh    # リソースID取得スクリプト
 └── import-commands.sh       # インポートコマンド例
 ```
@@ -118,6 +110,5 @@ terraform/
 ## 注意事項
 
 - API Tokenは環境変数で管理し、コードにハードコードしない
-- `terraform.tfvars`はGitにコミットしない（.gitignoreに追加済み）
 - インポート後は`import.tf`から適切なファイルにリソース定義を移動する
 - 本番環境での変更前は必ず`tofu plan`で確認する
