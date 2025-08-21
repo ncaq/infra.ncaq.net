@@ -21,10 +21,15 @@ API TokenはGitからignoreされている`.env.local`に書き込んでdirenv�
 
 #### API Tokenに必要な権限
 
-- Zone:DNS:Edit
-- Zone:Firewall Services:Edit
-- Zone:Page Rules:Edit
-- Zone:Read
+##### 読み取り権限
+
+全て。
+
+##### 編集権限
+
+- Zone:DNS
+- Zone:Firewall Services
+- Zone:Page Rules
 
 ## 運用
 
