@@ -31,6 +31,12 @@
           config,
           ...
         }:
+        let
+          pkgsWithUnfree = import inputs.nixpkgs {
+            system = pkgs.system;
+            config.allowUnfree = true;
+          };
+        in
         {
           treefmt.config = {
             projectRootFile = "flake.nix";
@@ -45,8 +51,8 @@
             };
           };
           devShells.default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              opentofu # 深い意図はない。unfree警告を外すのが面倒で、まだterraform固有の機能が必要では無かっただけ。
+            buildInputs = with pkgsWithUnfree; [
+              terraform
               terraform-docs
               terraform-ls
               tflint
