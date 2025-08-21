@@ -1,6 +1,6 @@
 # ncaq.net Cloudflare Infrastructure as Code
 
-このリポジトリはCloudflareのインフラストラクチャをOpenTofuで管理するための設定です。
+このリポジトリはCloudflareのインフラストラクチャをTerraformで管理するための設定です。
 
 ## セットアップ
 
@@ -39,20 +39,20 @@ API TokenはGitからignoreされている`.env.local`に書き込んでdirenv�
 ### 変更の確認
 
 ```bash
-tofu plan
+terraform plan
 ```
 
 ### 変更の適用
 
 ```bash
-tofu apply
+terraform apply
 ```
 
 ### 状態の確認
 
 ```bash
-tofu state list
-tofu state show <resource_name>
+terraform state list
+terraform state show <resource_name>
 ```
 
 ## 注意事項
