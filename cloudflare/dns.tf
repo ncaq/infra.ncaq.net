@@ -1,6 +1,6 @@
 resource "cloudflare_dns_record" "cdn" {
   zone_id = var.zone_id
-  name    = "cdn"
+  name    = "cdn.ncaq.net"
   type    = "CNAME"
   content = "cdn-ncaq-net.pages.dev"
   proxied = true
@@ -18,7 +18,7 @@ resource "cloudflare_dns_record" "root" {
 
 resource "cloudflare_dns_record" "www" {
   zone_id = var.zone_id
-  name    = "www"
+  name    = "www.ncaq.net"
   type    = "CNAME"
   content = "www-ncaq-net.pages.dev"
   proxied = true
@@ -27,7 +27,7 @@ resource "cloudflare_dns_record" "www" {
 
 resource "cloudflare_dns_record" "srv_imap" {
   zone_id = var.zone_id
-  name    = "_imap._tls"
+  name    = "_imap._tls.ncaq.net"
   type    = "SRV"
   data = {
     priority = 1
@@ -40,7 +40,7 @@ resource "cloudflare_dns_record" "srv_imap" {
 
 resource "cloudflare_dns_record" "txt_atproto" {
   zone_id = var.zone_id
-  name    = "_atproto"
+  name    = "_atproto.ncaq.net"
   type    = "TXT"
   content = "did=did:plc:2ivzjhpzepddchdol2xn2nba"
   comment = "bsky.app"
@@ -49,7 +49,7 @@ resource "cloudflare_dns_record" "txt_atproto" {
 
 resource "cloudflare_dns_record" "txt_discord" {
   zone_id = var.zone_id
-  name    = "_discord"
+  name    = "_discord.ncaq.net"
   type    = "TXT"
   content = "dh=08cb031d3313b647d5cb1de68a32bcbd39ea629d"
   ttl     = 300
@@ -57,7 +57,7 @@ resource "cloudflare_dns_record" "txt_discord" {
 
 resource "cloudflare_dns_record" "txt_dmarc" {
   zone_id = var.zone_id
-  name    = "_dmarc"
+  name    = "_dmarc.ncaq.net"
   type    = "TXT"
   content = "v=DMARC1;  p=quarantine; rua=mailto:9ebd3e36b8184ac595e59834e3c55330@dmarc-reports.cloudflare.net"
   ttl     = 300
