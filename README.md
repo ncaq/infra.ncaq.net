@@ -33,6 +33,7 @@ Terraform Cloudの管理ダッシュボードで以下の変数を設定して�
 - Zone:Email Routing
 - Zone:Firewall Services
 - Zone:Page Rules
+- Zone:zone_settings
 
 ## 運用
 

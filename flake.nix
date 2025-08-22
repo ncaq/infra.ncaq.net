@@ -52,6 +52,7 @@
           };
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgsWithUnfree; [
+              cf-terraforming
               terraform
               terraform-docs
               terraform-ls
