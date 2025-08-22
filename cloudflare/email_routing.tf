@@ -10,12 +10,16 @@ resource "cloudflare_email_routing_catch_all" "catch_all" {
   name    = "Catch all"
   enabled = true
 
-  matcher {
-    type = "all"
-  }
+  matchers = [
+    {
+      type = "all"
+    }
+  ]
 
-  action {
-    type  = "forward"
-    value = [cloudflare_email_routing_address.gmail.email]
-  }
+  actions = [
+    {
+      type  = "forward"
+      value = [cloudflare_email_routing_address.gmail.email]
+    }
+  ]
 }
