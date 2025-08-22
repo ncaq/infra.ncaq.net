@@ -1,4 +1,3 @@
-# DNSレコード - CNAME
 resource "cloudflare_record" "cdn" {
   zone_id = var.zone_id
   name    = "cdn"
@@ -7,43 +6,11 @@ resource "cloudflare_record" "cdn" {
   proxied = true
 }
 
-resource "cloudflare_record" "em8260" {
-  zone_id = var.zone_id
-  name    = "em8260"
-  type    = "CNAME"
-  content = "u37236823.wl074.sendgrid.net"
-  proxied = false
-}
-
 resource "cloudflare_record" "root" {
   zone_id = var.zone_id
   name    = "ncaq.net"
   type    = "CNAME"
   content = "ncaq-net.pages.dev"
-  proxied = true
-}
-
-resource "cloudflare_record" "s1_domainkey" {
-  zone_id = var.zone_id
-  name    = "s1._domainkey"
-  type    = "CNAME"
-  content = "s1.domainkey.u37236823.wl074.sendgrid.net"
-  proxied = false
-}
-
-resource "cloudflare_record" "s2_domainkey" {
-  zone_id = var.zone_id
-  name    = "s2._domainkey"
-  type    = "CNAME"
-  content = "s2.domainkey.u37236823.wl074.sendgrid.net"
-  proxied = false
-}
-
-resource "cloudflare_record" "tt_rss" {
-  zone_id = var.zone_id
-  name    = "tt-rss"
-  type    = "CNAME"
-  content = "plain.ncaq.net"
   proxied = true
 }
 
@@ -55,7 +22,6 @@ resource "cloudflare_record" "www" {
   proxied = true
 }
 
-# DNSレコード - SRV
 resource "cloudflare_record" "srv_imap" {
   zone_id = var.zone_id
   name    = "_imap._tls"
@@ -66,26 +32,6 @@ resource "cloudflare_record" "srv_imap" {
     port     = 993
     target   = "imap.gmail.com"
   }
-}
-
-resource "cloudflare_record" "srv_smtp" {
-  zone_id = var.zone_id
-  name    = "_smtp._tls"
-  type    = "SRV"
-  data {
-    priority = 1
-    weight   = 1
-    port     = 587
-    target   = "smtp.sendgrid.net"
-  }
-}
-
-# DNSレコード - TXT
-resource "cloudflare_record" "txt_acme_challenge_cdn" {
-  zone_id = var.zone_id
-  name    = "_acme-challenge.cdn"
-  type    = "TXT"
-  content = "Y-MYbvxIBVIQ3UV-C3SMq2UXdIAd0V5rDvv0_l-e9L8"
 }
 
 resource "cloudflare_record" "txt_atproto" {
