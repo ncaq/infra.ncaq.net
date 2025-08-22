@@ -8,3 +8,10 @@ updates:
       - "Type: CI"
       - "Type: Dependencies"
     open-pull-requests-limit: 20
+  - package-ecosystem: terraform
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels:
+      - "Type: Dependencies"
+    open-pull-requests-limit: 20
