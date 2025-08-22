@@ -6,26 +6,26 @@
 
 ### 必要な環境変数の設定
 
-```bash
-# Cloudflare API Token
-export CLOUDFLARE_API_TOKEN="your-api-token-here"
+Terraform Cloudの管理ダッシュボードで以下の変数を設定してください。
 
-# Zone IDとAccount ID
-export TF_VAR_zone_id="your-zone-id"
-export TF_VAR_account_id="your-account-id"
-```
+#### Workspace Variables
 
-API Tokenは[Cloudflareダッシュボード](https://dash.cloudflare.com/profile/api-tokens)から作成できます。
+- `zone_id`
+- `account_id`
 
-API TokenはGitからignoreされている`.env.local`に書き込んでdirenvで読み込むことを想定しています。
+#### Environment Variables
 
-#### API Tokenに必要な権限
+- `CLOUDFLARE_API_TOKEN` (Sensitiveにチェック)
 
-##### 読み取り権限
+`CLOUDFLARE_API_TOKEN`は[Cloudflareダッシュボード](https://dash.cloudflare.com/profile/api-tokens)から作成できます。
+
+### `CLOUDFLARE_API_TOKEN`に必要な権限
+
+#### 読み取り権限
 
 全て。
 
-##### 編集権限
+#### 編集権限
 
 - Account:Email Routing Address
 - Zone:Cache Rules
@@ -54,7 +54,3 @@ terraform apply
 terraform state list
 terraform state show <resource_name>
 ```
-
-## 注意事項
-
-API Tokenは環境変数で管理し、Gitで管理されるファイルにハードコードしない。
