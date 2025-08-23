@@ -35,7 +35,7 @@ resource "cloudflare_dns_record" "srv_imap" {
     port     = 993
     target   = "imap.gmail.com"
   }
-  ttl = 300
+  ttl      = 300
   priority = 1
 }
 
