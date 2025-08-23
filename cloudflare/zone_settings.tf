@@ -1,4 +1,3 @@
-# ゾーン設定
 resource "cloudflare_zone_setting" "always_use_https" {
   zone_id    = var.zone_id
   setting_id = "always_use_https"
