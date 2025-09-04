@@ -27,6 +27,7 @@ Terraform Cloudの管理ダッシュボードで以下の変数を設定して�
 
 #### 編集権限
 
+- Account Cloudflare Tunnel
 - Account:Email Routing Address
 - Zone:Cache Rules
 - Zone:DNS
@@ -35,7 +36,7 @@ Terraform Cloudの管理ダッシュボードで以下の変数を設定して�
 - Zone:Page Rules
 - Zone:zone_settings
 
-## 運用
+## 適用
 
 ### 変更の確認
 
@@ -55,3 +56,13 @@ terraform apply
 terraform state list
 terraform state show <resource_name>
 ```
+
+## 転送
+
+認証情報ファイルを出力します。
+
+```bash
+terraform output -raw tunnel_seminar_credentials|tee tunnel-seminar.json
+```
+
+適切なサーバに転送してください。
