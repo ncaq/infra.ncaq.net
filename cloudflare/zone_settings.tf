@@ -7,7 +7,7 @@ resource "cloudflare_zone_setting" "always_use_https" {
 resource "cloudflare_zone_setting" "ssl" {
   zone_id    = var.zone_id
   setting_id = "ssl"
-  value      = "full"
+  value      = "flexible"
 }
 
 resource "cloudflare_zone_setting" "cache_level" {
