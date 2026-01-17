@@ -54,7 +54,7 @@ resource "cloudflare_dns_record" "txt_spf_root" {
   zone_id = var.zone_id
   name    = "ncaq.net"
   type    = "TXT"
-  content = "v=spf1 include:_spf.mx.cloudflare.net ~all"
+  content = "v=spf1 include:_spf.mx.cloudflare.net include:amazonses.com ~all"
   ttl     = "1"
 }
 
