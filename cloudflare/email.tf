@@ -33,12 +33,37 @@ resource "cloudflare_dns_record" "txt_dmarc" {
   ttl     = 300
 }
 
-resource "cloudflare_dns_record" "txt_spf" {
+resource "cloudflare_dns_record" "txt_dkim" {
+  zone_id = var.zone_id
+  name    = "resend._domainkey"
+  type    = "TXT"
+  content = "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDhvirIaSsC/w599eQYBCubrI9d9HoZoc5BlVZ2zlDqUk8QNy49OMZPxLvtA7D9P1e3Mz2m1/un9VYd0z3CG0CPmnrwcwccYNOM9NFB9eKTHxLsvdiRAwhGEp0XQ6bZUmu1VhwVpDqO7cmQ4m/6nS2retFjPQ74IKJ4R1OHOSbfEQIDAQAB"
+  ttl     = "1"
+}
+
+resource "cloudflare_dns_record" "mx_spf" {
+  zone_id = var.zone_id
+  name    = "send"
+  type    = "MX"
+  content = "feedback-smtp.ap-northeast-1.amazonses.com"
+  ttl     = "1"
+  priority = 10
+}
+
+resource "cloudflare_dns_record" "txt_spf_root" {
   zone_id = var.zone_id
   name    = "ncaq.net"
   type    = "TXT"
   content = "v=spf1 include:_spf.mx.cloudflare.net ~all"
-  ttl     = 300
+  ttl     = "1"
+}
+
+resource "cloudflare_dns_record" "txt_spf_send" {
+  zone_id = var.zone_id
+  name    = "send"
+  type    = "TXT"
+  content = "v=spf1 include:amazonses.com ~all"
+  ttl     = "1"
 }
 
 # クライアント向けヒント
