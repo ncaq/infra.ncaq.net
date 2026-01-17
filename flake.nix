@@ -61,7 +61,7 @@
                   #!/usr/bin/env bash
                   set -euo pipefail
                   cd "$(git rev-parse --show-toplevel)"
-                  terraform init -lockfile=readonly
+                  terraform init -backend=false -lockfile=readonly
                   terraform validate
                 '';
               });
