@@ -78,7 +78,6 @@ resource "cloudflare_dns_record" "srv_imap" {
     target   = "imap.gmail.com"
   }
   ttl      = 300
-  priority = 1
 }
 
 resource "cloudflare_dns_record" "srv_smtp" {
@@ -92,5 +91,4 @@ resource "cloudflare_dns_record" "srv_smtp" {
     target   = "smtp.resend.com"
   }
   ttl      = 300
-  priority = 1
 }
