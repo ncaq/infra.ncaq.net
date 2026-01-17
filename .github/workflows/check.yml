@@ -28,5 +28,3 @@ jobs:
         with:
           extra_nix_config: |
             accept-flake-config = true
-      - name: editorconfig-checker
-        run: nix run 'nixpkgs#editorconfig-checker' -- -config .editorconfig-checker.json

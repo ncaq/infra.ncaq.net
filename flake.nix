@@ -49,6 +49,24 @@
               shfmt.enable = true;
               terraform.enable = true;
             };
+            settings.formatter = {
+              editorconfig-checker = {
+                command = pkgs.lib.getExe (
+                  pkgs.writeShellApplication {
+                    name = "editorconfig-checker";
+                    runtimeInputs = [ pkgs.editorconfig-checker ];
+                    text = ''
+                      editorconfig-checker -config .editorconfig-checker.json "$@"
+                    '';
+                  }
+                );
+                includes = [ "*" ];
+                excludes = [
+                  ".git/*"
+                ];
+              };
+            };
+          };
           };
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgsWithUnfree; [
