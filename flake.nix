@@ -10,34 +10,19 @@
     };
   };
 
-  outputs =
-    inputs@{
-      flake-parts,
-      treefmt-nix,
-      ...
-    }:
+  outputs = inputs@{ flake-parts, treefmt-nix, ... }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [
-        treefmt-nix.flakeModule
-      ];
+      imports = [ treefmt-nix.flakeModule ];
 
-      systems = [
-        "x86_64-linux"
-      ];
+      systems = [ "x86_64-linux" ];
 
-      perSystem =
-        {
-          pkgs,
-          config,
-          ...
-        }:
+      perSystem = { pkgs, config, ... }:
         let
           pkgsWithUnfree = import inputs.nixpkgs {
             system = pkgs.system;
             config.allowUnfree = true;
           };
-        in
-        {
+        in {
           treefmt.config = {
             projectRootFile = "flake.nix";
             programs = {
@@ -52,39 +37,34 @@
             };
             settings.formatter = {
               editorconfig-checker = {
-                command = pkgs.lib.getExe (
-                  pkgs.writeShellApplication {
-                    name = "editorconfig-checker";
-                    runtimeInputs = [ pkgs.editorconfig-checker ];
-                    text = ''
-                      editorconfig-checker -config .editorconfig-checker.json "$@"
-                    '';
-                  }
-                );
+                command = pkgs.lib.getExe (pkgs.writeShellApplication {
+                  name = "editorconfig-checker";
+                  runtimeInputs = [ pkgs.editorconfig-checker ];
+                  text = ''
+                    editorconfig-checker -config .editorconfig-checker.json "$@"
+                  '';
+                });
                 includes = [ "*" ];
-                excludes = [
-                  ".git/*"
-                ];
+                excludes = [ ".git/*" ];
               };
             };
           };
           apps = {
             terraform-validate = {
               type = "app";
-              meta.description = "Terraform validate because network is required";
-              program = pkgs.lib.getExe (
-                pkgs.writeShellApplication {
-                  name = "terraform-validate";
-                  runtimeInputs = [ pkgsWithUnfree.terraform ];
-                  text = ''
-                    #!/usr/bin/env bash
-                    set -euo pipefail
-                    cd "$(git rev-parse --show-toplevel)"
-                    terraform init -lockfile=readonly
-                    terraform validate
-                  '';
-                }
-              );
+              meta.description =
+                "Terraform validate because network is required";
+              program = pkgs.lib.getExe (pkgs.writeShellApplication {
+                name = "terraform-validate";
+                runtimeInputs = [ pkgsWithUnfree.terraform ];
+                text = ''
+                  #!/usr/bin/env bash
+                  set -euo pipefail
+                  cd "$(git rev-parse --show-toplevel)"
+                  terraform init -lockfile=readonly
+                  terraform validate
+                '';
+              });
             };
           };
           devShells.default = pkgs.mkShell {
@@ -100,10 +80,8 @@
     };
 
   nixConfig = {
-    extra-substituters = [
-      "https://cache.nixos.org/"
-      "https://nix-community.cachix.org"
-    ];
+    extra-substituters =
+      [ "https://cache.nixos.org/" "https://nix-community.cachix.org" ];
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
