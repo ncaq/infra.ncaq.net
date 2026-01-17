@@ -41,6 +41,7 @@
           treefmt.config = {
             projectRootFile = "flake.nix";
             programs = {
+              actionlint.enable = true;
               deadnix.enable = true;
               hclfmt.enable = true;
               nixfmt.enable = true;
