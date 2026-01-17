@@ -42,11 +42,11 @@ resource "cloudflare_dns_record" "txt_dkim" {
 }
 
 resource "cloudflare_dns_record" "mx_spf" {
-  zone_id = var.zone_id
-  name    = "send"
-  type    = "MX"
-  content = "feedback-smtp.ap-northeast-1.amazonses.com"
-  ttl     = 1
+  zone_id  = var.zone_id
+  name     = "send"
+  type     = "MX"
+  content  = "feedback-smtp.ap-northeast-1.amazonses.com"
+  ttl      = 1
   priority = 10
 }
 
