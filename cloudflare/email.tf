@@ -33,7 +33,7 @@ resource "cloudflare_dns_record" "txt_dmarc" {
   ttl     = 300
 }
 
-resource "cloudflare_dns_record" "txt_dkim" {
+resource "cloudflare_dns_record" "txt_dkim_resend" {
   zone_id = var.zone_id
   name    = "resend._domainkey"
   type    = "TXT"
