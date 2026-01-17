@@ -67,6 +67,24 @@
               };
             };
           };
+          apps = {
+            terraform-validate = {
+              type = "app";
+              meta.description = "Terraform validate because network is required";
+              program = pkgs.lib.getExe (
+                pkgs.writeShellApplication {
+                  name = "terraform-validate";
+                  runtimeInputs = [ pkgsWithUnfree.terraform ];
+                  text = ''
+                    #!/usr/bin/env bash
+                    set -euo pipefail
+                    cd "$(git rev-parse --show-toplevel)"
+                    terraform init -lockfile=readonly
+                    terraform validate
+                  '';
+                }
+              );
+            };
           };
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgsWithUnfree; [
