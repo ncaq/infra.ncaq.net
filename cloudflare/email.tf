@@ -80,3 +80,17 @@ resource "cloudflare_dns_record" "srv_imap" {
   ttl      = 300
   priority = 1
 }
+
+resource "cloudflare_dns_record" "srv_smtp" {
+  zone_id = var.zone_id
+  name    = "_submission._tcp.ncaq.net"
+  type    = "SRV"
+  data = {
+    priority = 1
+    weight   = 1
+    port     = 465
+    target   = "smtp.resend.com"
+  }
+  ttl      = 300
+  priority = 1
+}
