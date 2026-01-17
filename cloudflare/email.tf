@@ -41,7 +41,7 @@ resource "cloudflare_dns_record" "txt_dkim_resend" {
   ttl     = 1
 }
 
-resource "cloudflare_dns_record" "mx_spf" {
+resource "cloudflare_dns_record" "mx_amazonses" {
   zone_id  = var.zone_id
   name     = "send"
   type     = "MX"
