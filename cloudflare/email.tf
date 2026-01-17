@@ -30,7 +30,7 @@ resource "cloudflare_dns_record" "txt_dmarc" {
   name    = "_dmarc.ncaq.net"
   type    = "TXT"
   content = "v=DMARC1;  p=quarantine; rua=mailto:9ebd3e36b8184ac595e59834e3c55330@dmarc-reports.cloudflare.net"
-  ttl     = 300
+  ttl     = 1
 }
 
 resource "cloudflare_dns_record" "txt_dkim_resend" {
@@ -77,7 +77,7 @@ resource "cloudflare_dns_record" "srv_imap" {
     port     = 993
     target   = "imap.gmail.com"
   }
-  ttl      = 300
+  ttl = 1
 }
 
 resource "cloudflare_dns_record" "srv_smtp" {
@@ -90,5 +90,5 @@ resource "cloudflare_dns_record" "srv_smtp" {
     port     = 465
     target   = "smtp.resend.com"
   }
-  ttl      = 300
+  ttl = 1
 }
