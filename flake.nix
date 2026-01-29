@@ -18,10 +18,10 @@
       systems = [ "x86_64-linux" ];
 
       perSystem =
-        { pkgs, ... }:
+        { pkgs, system, ... }:
         let
           pkgsWithUnfree = import inputs.nixpkgs {
-            inherit (pkgs) system;
+            inherit system;
             config.allowUnfree = true;
           };
         in
