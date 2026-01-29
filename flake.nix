@@ -34,6 +34,13 @@
               shellcheck.enable = true;
               shfmt.enable = true;
               terraform.enable = true;
+              typos.enable = true;
+              zizmor.enable = true;
+
+              statix = {
+                enable = true;
+                disabled-lints = [ "eta_reduction" ];
+              };
             };
             settings.formatter = {
               editorconfig-checker = {
