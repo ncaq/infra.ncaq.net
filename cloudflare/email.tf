@@ -68,9 +68,10 @@ resource "cloudflare_dns_record" "txt_spf_send" {
 
 # クライアント向けヒント
 resource "cloudflare_dns_record" "srv_imap" {
-  zone_id = var.zone_id
-  name    = "_imap._tls.ncaq.net"
-  type    = "SRV"
+  zone_id  = var.zone_id
+  name     = "_imap._tls.ncaq.net"
+  type     = "SRV"
+  priority = 1
   data = {
     priority = 1
     weight   = 1
@@ -81,9 +82,10 @@ resource "cloudflare_dns_record" "srv_imap" {
 }
 
 resource "cloudflare_dns_record" "srv_smtp" {
-  zone_id = var.zone_id
-  name    = "_submission._tcp.ncaq.net"
-  type    = "SRV"
+  zone_id  = var.zone_id
+  name     = "_submission._tcp.ncaq.net"
+  type     = "SRV"
+  priority = 1
   data = {
     priority = 1
     weight   = 1
