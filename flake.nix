@@ -19,7 +19,7 @@
       perSystem = { pkgs, config, ... }:
         let
           pkgsWithUnfree = import inputs.nixpkgs {
-            system = pkgs.system;
+            inherit (pkgs) system;
             config.allowUnfree = true;
           };
         in {
