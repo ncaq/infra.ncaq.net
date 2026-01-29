@@ -40,6 +40,10 @@ max_line_length = 200
 # 署名などは分割困難なので制限を大きく緩めます。
 max_line_length = 300
 
+[*.sops*]
+# 暗号化されたデータは改行困難かつ長くなるので行数制限しません。
+max_line_length = off
+
 [*.bat]
 charset = latin1
 end_of_line = crlf
