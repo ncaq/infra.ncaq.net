@@ -36,6 +36,10 @@ trim_trailing_whitespace = false
 # 設定やドキュメントのファイルはURLなど改行困難なものが多いため行幅制限を緩めます。
 max_line_length = 200
 
+[*.tf]
+# 署名などは分割困難なので制限を大きく緩めます。
+max_line_length = 300
+
 [*.bat]
 charset = latin1
 end_of_line = crlf
