@@ -51,6 +51,17 @@ env変数としてトークンを設定してください。
 - Zone:Page Rules
 - Zone:zone_settings
 
+## Tailscaleの環境変数のセットアップ
+
+Terraform Cloudの管理ダッシュボードで変数を設定してください。
+
+env変数としてOAuthのトークンを設定してください。
+[Trust credentials - Tailscale](https://login.tailscale.com/admin/settings/trust-credentials)
+から作成できます。
+
+- `TAILSCALE_OAUTH_CLIENT_ID`
+- `TAILSCALE_OAUTH_CLIENT_SECRET`(Sensitiveにチェック)
+
 ## 適用
 
 ### 変更の確認
