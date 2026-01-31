@@ -1,24 +1,25 @@
-# ncaq.net Cloudflare Infrastructure as Code
+# ncaq.net Infrastructure as Code
 
-このリポジトリはCloudflareのインフラストラクチャをTerraformで管理するための設定です。
+このリポジトリは`ncaq.net`関連のインフラストラクチャをTerraformで管理するための設定です。
 
-## セットアップ
-
-### ログイン
+## terraformのセットアップ
 
 ```bash
 terraform login
 ```
 
-### 必要な環境変数の設定
+必要に応じてinitします。
+
+```bash
+terraform init
+```
+
+## Cloudflareの環境変数のセットアップ
 
 Terraform Cloudの管理ダッシュボードで以下の変数を設定してください。
 
-#### Workspace Variables
-
-Cloudflareのダッシュボードのドメインの管理画面かの右下のAPIセクションから取得できます。
-
-HCL形式で設定してください。
+以下のterraform変数をHCL形式で設定してください。
+Cloudflareのダッシュボードのドメインの管理画面の右下のAPIセクションから取得できます。
 
 ```hcl
 {
@@ -27,7 +28,7 @@ HCL形式で設定してください。
 }
 ```
 
-#### Environment Variables
+env変数として以下を設定してください。
 
 - `CLOUDFLARE_API_TOKEN` (Sensitiveにチェック)
 
