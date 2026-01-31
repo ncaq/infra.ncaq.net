@@ -2,8 +2,8 @@ resource "tailscale_acl" "this" {
   acl = jsonencode({
     grants = [
       {
-        src = ["*"],
-        dst = ["*"],
+        src = ["autogroup:member"],
+        dst = ["autogroup:member"],
         ip  = ["*"],
       },
     ],
