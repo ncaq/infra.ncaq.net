@@ -14,7 +14,7 @@ resource "cloudflare_dns_record" "forgejo" {
 # WindowsとAndroidが現状CNAMEチェーンを追跡しないため、
 # IPアドレスを指定しています。
 # TailscaleのIPアドレスは公開しても問題ないため`proxied = false`。
-resource "cloudflare_dns_record" "forgejo-ssh-v4" {
+resource "cloudflare_dns_record" "forgejo_ssh_v4" {
   zone_id = var.zone_id
   name    = "ssh.forgejo.ncaq.net"
   type    = "A"
@@ -23,7 +23,7 @@ resource "cloudflare_dns_record" "forgejo-ssh-v4" {
   ttl     = 1
 }
 
-resource "cloudflare_dns_record" "forgejo-ssh-v6" {
+resource "cloudflare_dns_record" "forgejo_ssh_v6" {
   zone_id = var.zone_id
   name    = "ssh.forgejo.ncaq.net"
   type    = "AAAA"
