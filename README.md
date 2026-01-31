@@ -16,8 +16,16 @@ Terraform Cloudの管理ダッシュボードで以下の変数を設定して�
 
 #### Workspace Variables
 
-- `zone_id`
-- `account_id`
+Cloudflareのダッシュボードのドメインの管理画面かの右下のAPIセクションから取得できます。
+
+HCL形式で設定してください。
+
+```hcl
+{
+  zone_id    = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  account_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+}
+```
 
 #### Environment Variables
 
