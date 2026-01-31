@@ -1,4 +1,12 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(source .env.local)",
+      "Bash(tailscale status:*)",
+      "Bash(terraform plan:*)",
+      "Bash(terraform version:*)"
+    ]
+  },
   "hooks": {
     "PostToolUse": [
       {
