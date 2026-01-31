@@ -5,5 +5,5 @@ module "cloudflare" {
 }
 
 module "tailscale" {
-  source     = "./tailscale"
+  source = "./tailscale"
 }
