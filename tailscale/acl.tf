@@ -12,7 +12,7 @@ resource "tailscale_acl" "this" {
         action = "check",
         src    = ["autogroup:member"],
         dst    = ["autogroup:self"],
-        users  = ["autogroup:nonroot", "root"],
+        users  = ["autogroup:nonroot"],
       },
     ],
   })
