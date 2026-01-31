@@ -32,7 +32,7 @@ env変数としてトークンを設定してください。
 
 トークンは[Cloudflareダッシュボード](https://dash.cloudflare.com/profile/api-tokens)から作成できます。
 
-- `CLOUDFLARE_API_TOKEN` (Sensitiveにチェック)
+- `CLOUDFLARE_API_TOKEN`(Sensitiveにチェック)
 
 ### `CLOUDFLARE_API_TOKEN`に必要な権限
 
