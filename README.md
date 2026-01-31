@@ -28,11 +28,11 @@ Cloudflareのダッシュボードのドメインの管理画面の右下のAPI�
 }
 ```
 
-env変数として以下を設定してください。
+env変数としてトークンを設定してください。
 
-- `CLOUDFLARE_API_TOKEN` (Sensitiveにチェック)
+トークンは[Cloudflareダッシュボード](https://dash.cloudflare.com/profile/api-tokens)から作成できます。
 
-`CLOUDFLARE_API_TOKEN`は[Cloudflareダッシュボード](https://dash.cloudflare.com/profile/api-tokens)から作成できます。
+- `CLOUDFLARE_API_TOKEN`(Sensitiveにチェック)
 
 ### `CLOUDFLARE_API_TOKEN`に必要な権限
 
@@ -50,6 +50,16 @@ env変数として以下を設定してください。
 - Zone:Firewall Services
 - Zone:Page Rules
 - Zone:zone_settings
+
+## Tailscaleの環境変数のセットアップ
+
+Terraform Cloudの管理ダッシュボードで変数を設定してください。
+
+env変数として以下のOAuthクライアントID/シークレットを設定してください。
+これらは[Trust credentials - Tailscale](https://login.tailscale.com/admin/settings/trust-credentials)の画面でOAuthクライアントを作成して取得できます。
+
+- `TAILSCALE_OAUTH_CLIENT_ID`
+- `TAILSCALE_OAUTH_CLIENT_SECRET`(Sensitiveにチェック)
 
 ## 適用
 
