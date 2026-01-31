@@ -1,13 +1,17 @@
+locals {
+  email = "ncaq@ncaq.net"
+}
+
 resource "tailscale_contacts" "this" {
   account {
-    email = "ncaq@ncaq.net"
+    email = local.email
   }
 
   support {
-    email = "ncaq@ncaq.net"
+    email = local.email
   }
 
   security {
-    email = "ncaq@ncaq.net"
+    email = local.email
   }
 }
