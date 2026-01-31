@@ -28,11 +28,11 @@ Cloudflareのダッシュボードのドメインの管理画面の右下のAPI�
 }
 ```
 
-env変数として以下を設定してください。
+env変数としてトークンを設定してください。
+
+トークンは[Cloudflareダッシュボード](https://dash.cloudflare.com/profile/api-tokens)から作成できます。
 
 - `CLOUDFLARE_API_TOKEN` (Sensitiveにチェック)
-
-`CLOUDFLARE_API_TOKEN`は[Cloudflareダッシュボード](https://dash.cloudflare.com/profile/api-tokens)から作成できます。
 
 ### `CLOUDFLARE_API_TOKEN`に必要な権限
 
