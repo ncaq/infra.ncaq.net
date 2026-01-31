@@ -16,9 +16,9 @@ terraform init
 
 ## Cloudflareの環境変数のセットアップ
 
-Terraform Cloudの管理ダッシュボードで以下の変数を設定してください。
+Terraform Cloudの管理ダッシュボードで変数を設定してください。
 
-以下のterraform変数をHCL形式で設定してください。
+key`cloudflare`の変数をHCL形式で設定してください。
 Cloudflareのダッシュボードのドメインの管理画面の右下のAPIセクションから取得できます。
 
 ```hcl
