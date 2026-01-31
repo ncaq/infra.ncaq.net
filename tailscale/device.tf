@@ -22,6 +22,7 @@ resource "tailscale_device_authorization" "this" {
 }
 
 resource "tailscale_device_key" "this" {
-  for_each  = local.device
-  device_id = data.tailscale_device.this[each.key].id
+  for_each            = local.device
+  device_id           = data.tailscale_device.this[each.key].id
+  key_expiry_disabled = true # 個人使用なら無期限で良いと思うため
 }
