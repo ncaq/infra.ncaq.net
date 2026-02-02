@@ -26,7 +26,16 @@ resource "tailscale_acl" "this" {
         dst = ["autogroup:member"],
         ip  = ["*"],
       },
+      {
+        src = ["autogroup:member"],
+        dst = ["autogroup:internet"],
+        ip  = ["*"],
+      },
     ],
+    # 指定されたタグ付きのデバイスもexit nodeとしては自動承認します。
+    autoApprovers = {
+      exitNode = ["tag:server"],
+    },
     ssh = [
       {
         action = "check",
