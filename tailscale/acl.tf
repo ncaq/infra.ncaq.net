@@ -36,6 +36,13 @@ resource "tailscale_acl" "this" {
     autoApprovers = {
       exitNode = ["tag:server"],
     },
+    # serverがfunnelを使えるようにします。
+    nodeAttrs = [
+      {
+        target = ["tag:server"]
+        attr   = ["funnel"]
+      },
+    ]
     ssh = [
       {
         action = "check",
