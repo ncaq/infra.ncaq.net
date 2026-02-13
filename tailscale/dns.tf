@@ -6,16 +6,16 @@ resource "tailscale_dns_configuration" "this" {
   # 以下のDNSサーバーを使用します。
   # Cloudflare Public DNS
   nameservers {
-    address = "1.1.1.1"
-  }
-  nameservers {
-    address = "1.0.0.1"
-  }
-  nameservers {
     address = "2606:4700:4700::1111"
   }
   nameservers {
     address = "2606:4700:4700::1001"
+  }
+  nameservers {
+    address = "1.1.1.1"
+  }
+  nameservers {
+    address = "1.0.0.1"
   }
   # Google Public DNS
   nameservers {
