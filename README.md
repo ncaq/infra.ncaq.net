@@ -46,6 +46,7 @@ env変数としてトークンを設定してください。
 - Account:Email Routing Address
 - Zone:Cache Rules
 - Zone:DNS
+- Zone:Dynamic Redirect
 - Zone:Email Routing
 - Zone:Firewall Services
 - Zone:Page Rules
