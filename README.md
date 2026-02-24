@@ -62,6 +62,16 @@ env変数として以下のOAuthクライアントID/シークレットを設定
 - `TAILSCALE_OAUTH_CLIENT_ID`
 - `TAILSCALE_OAUTH_CLIENT_SECRET`(Sensitiveにチェック)
 
+## Mackerelの環境変数のセットアップ
+
+Terraform Cloudの管理ダッシュボードで変数を設定してください。
+
+ローカルで開発する場合はenv変数としてMackerel APIキーを設定してください。
+
+APIキーは[Mackerelダッシュボード](https://mackerel.io/my?tab=apikeys)から作成できます。
+
+- `MACKEREL_API_KEY`(Sensitiveにチェック)
+
 ## 適用
 
 ### 変更の確認
