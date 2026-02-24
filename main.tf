@@ -9,3 +9,7 @@ module "cloudflare" {
 module "tailscale" {
   source = "./tailscale"
 }
+
+module "mackerel" {
+  source = "./mackerel"
+}
