@@ -4,43 +4,40 @@
 
 ## terraformのセットアップ
 
-```bash
+```zsh
 terraform login
 ```
 
 必要に応じてinitします。
 
-```bash
+```zsh
 terraform init
 ```
 
-## Cloudflareの環境変数のセットアップ
+## 環境変数の定義
 
-Terraform Cloudの管理ダッシュボードで変数を設定してください。
+`.env.sops`に暗号化してコミットしてあります。
+direnvによって自動的に読み込まれるようになっています。
 
-key`cloudflare`の変数をHCL形式で設定してください。
-Cloudflareのダッシュボードのドメインの管理画面の右下のAPIセクションから取得できます。
+編集コマンドは以下の通りです。
 
-```hcl
-{
-  zone_id    = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-  account_id = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-}
+```zsh
+sops --input-type dotenv --output-type dotenv .env.sops
 ```
 
-env変数としてトークンを設定してください。
+### Cloudflare
+
+以下の環境変数を設定してください。
+
+`CLOUDFLARE_API_TOKEN`
 
 トークンは[Cloudflareダッシュボード](https://dash.cloudflare.com/profile/api-tokens)から作成できます。
 
-- `CLOUDFLARE_API_TOKEN`(Sensitiveにチェック)
+#### 必要な権限
 
-### `CLOUDFLARE_API_TOKEN`に必要な権限
+読み取り権限は全てです。
 
-#### 読み取り権限
-
-全て。
-
-#### 編集権限
+書き込み権限は以下です。
 
 - Account Cloudflare Tunnel
 - Account:Email Routing Address
@@ -52,43 +49,59 @@ env変数としてトークンを設定してください。
 - Zone:Page Rules
 - Zone:zone_settings
 
-## Tailscaleの環境変数のセットアップ
+### Tailscale
 
-Terraform Cloudの管理ダッシュボードで変数を設定してください。
-
-env変数として以下のOAuthクライアントID/シークレットを設定してください。
-これらは[Trust credentials - Tailscale](https://login.tailscale.com/admin/settings/trust-credentials)の画面でOAuthクライアントを作成して取得できます。
+以下の環境変数を設定してください。
 
 - `TAILSCALE_OAUTH_CLIENT_ID`
-- `TAILSCALE_OAUTH_CLIENT_SECRET`(Sensitiveにチェック)
+- `TAILSCALE_OAUTH_CLIENT_SECRET`
 
-## Mackerelの環境変数のセットアップ
+これらは、
+[Trust credentials - Tailscale](https://login.tailscale.com/admin/settings/trust-credentials)
+の画面でOAuthクライアントを作成して取得できます。
 
-Terraform Cloudの管理ダッシュボードで変数を設定してください。
+#### 必要な権限
 
-ローカルで開発する場合はenv変数としてMackerel APIキーを設定してください。
+読み込み権限は`all:read`です。
+
+書き込み権限は以下です。
+
+- dns
+- policy_file
+- devices:core
+- devices:posture_attributes
+- devices:routes
+- webhooksservices
+- account_settings
+- feature_settings
+- services
+- networking_settings
+
+### Mackerel
+
+以下の環境変数を設定してください。
+
+- `MACKEREL_API_KEY`
 
 APIキーは[Mackerelダッシュボード](https://mackerel.io/my?tab=apikeys)から作成できます。
-
-- `MACKEREL_API_KEY`(Sensitiveにチェック)
 
 ## 適用
 
 ### 変更の確認
 
-```bash
+```zsh
 terraform plan
 ```
 
 ### 変更の適用
 
-```bash
+```zsh
 terraform apply
 ```
 
 ### 状態の確認
 
-```bash
+```zsh
 terraform state list
 terraform state show <resource_name>
 ```
@@ -97,7 +110,7 @@ terraform state show <resource_name>
 
 認証情報ファイルを出力します。
 
-```bash
+```zsh
 terraform output -raw tunnel_seminar_credentials|tee tunnel-seminar.json
 ```
 
