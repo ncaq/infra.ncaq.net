@@ -33,6 +33,14 @@ sops --input-type dotenv --output-type dotenv .env.sops
 
 トークンは[Cloudflareダッシュボード](https://dash.cloudflare.com/profile/api-tokens)から作成できます。
 
+Terraform変数はプレフィックス`TF_VAR_`を付けた環境変数で渡します。
+以下の環境変数を設定してください。
+
+- `TF_VAR_zone_id`
+- `TF_VAR_account_id`
+
+これらは[Cloudflareダッシュボード](https://dash.cloudflare.com/)のドメイン概要ページから確認できます。
+
 #### 必要な権限
 
 読み取り権限は全てです。

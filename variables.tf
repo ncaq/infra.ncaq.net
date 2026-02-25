@@ -1,7 +1,9 @@
-variable "cloudflare" {
-  description = "Cloudflare configuration"
-  type = object({
-    zone_id    = string
-    account_id = string
-  })
+variable "zone_id" {
+  description = "Cloudflare Zone ID"
+  type        = string
+}
+
+variable "account_id" {
+  description = "Cloudflare Account ID"
+  type        = string
 }
