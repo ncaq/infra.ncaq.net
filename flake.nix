@@ -18,11 +18,17 @@
       systems = [ "x86_64-linux" ];
 
       perSystem =
-        { pkgs, system, ... }:
+        { lib, system, ... }:
         let
-          pkgsWithUnfree = import inputs.nixpkgs {
+          allowlistedLicenses = with lib.licenses; [
+            bsl11 # Terraformを使うので許可します。個人的にもAGPLがフリーでbsl11がフリーじゃないのはあまり納得感がない。
+          ];
+          nixpkgsConfig = {
+            inherit allowlistedLicenses;
+          };
+          pkgs = import inputs.nixpkgs {
             inherit system;
-            config.allowUnfree = true;
+            config = nixpkgsConfig;
           };
 
           mkr = pkgs.callPackage ./pkgs/mkr.nix { };
@@ -70,7 +76,7 @@
               program = pkgs.lib.getExe (
                 pkgs.writeShellApplication {
                   name = "terraform-validate";
-                  runtimeInputs = [ pkgsWithUnfree.terraform ];
+                  runtimeInputs = [ pkgs.terraform ];
                   text = ''
                     #!/usr/bin/env bash
                     set -euo pipefail
@@ -83,7 +89,7 @@
             };
           };
           devShells.default = pkgs.mkShell {
-            buildInputs = with pkgsWithUnfree; [
+            buildInputs = with pkgs; [
               cf-terraforming
               mkr
               terraform
