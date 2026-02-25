@@ -24,6 +24,8 @@
             inherit system;
             config.allowUnfree = true;
           };
+
+          mkr = pkgs.callPackage ./pkgs/mkr.nix { };
         in
         {
           treefmt.config = {
@@ -83,6 +85,7 @@
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgsWithUnfree; [
               cf-terraforming
+              mkr
               terraform
               terraform-docs
               terraform-ls
