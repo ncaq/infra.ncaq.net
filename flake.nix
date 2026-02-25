@@ -92,6 +92,7 @@
             buildInputs = with pkgs; [
               cf-terraforming
               mkr
+              sops
               terraform
               terraform-docs
               terraform-ls
