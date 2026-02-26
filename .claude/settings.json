@@ -7,6 +7,8 @@
       "Bash(terraform show:*)"
     ]
   },
+  "enabledMcpjsonServers": ["mackerel"],
+  "enableAllProjectMcpServers": true,
   "hooks": {
     "PostToolUse": [
       {
