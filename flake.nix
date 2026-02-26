@@ -31,9 +31,13 @@
             config = nixpkgsConfig;
           };
 
+          mackerelMcpServer = pkgs.callPackage ./pkgs/mackerel-mcp-server.nix { };
           mkr = pkgs.callPackage ./pkgs/mkr.nix { };
         in
         {
+          packages = {
+            inherit mackerelMcpServer;
+          };
           treefmt.config = {
             projectRootFile = "flake.nix";
             programs = {
