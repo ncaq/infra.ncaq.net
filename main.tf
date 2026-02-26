@@ -11,6 +11,6 @@ module "tailscale" {
 }
 
 module "mackerel" {
-  source      = "./mackerel"
-  webhook_url = var.mackerel_webhook_url
+  source    = "./mackerel"
+  slack_url = var.mackerel_slack_url
 }

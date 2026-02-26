@@ -1,5 +1,5 @@
-variable "webhook_url" {
-  description = "Webhook URL for Mackerel notifications"
+variable "slack_url" {
+  description = "Slack-compatible webhook URL for Mackerel notifications (e.g., Discord /slack endpoint)"
   type        = string
   sensitive   = true
 }

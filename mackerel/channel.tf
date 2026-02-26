@@ -1,8 +1,8 @@
-resource "mackerel_channel" "webhook" {
-  name = "webhook"
+resource "mackerel_channel" "slack" {
+  name = "slack"
 
-  webhook {
-    url    = var.webhook_url
+  slack {
+    url    = var.slack_url
     events = ["alert", "alertGroup", "hostStatus", "monitor"]
   }
 }

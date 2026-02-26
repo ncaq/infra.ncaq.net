@@ -104,7 +104,7 @@ MCPが利用する環境変数名は以下の名前になります。
 Webhook通知の転送先URLはTerraform変数として管理します。
 以下の環境変数を設定してください。
 
-- `TF_VAR_mackerel_webhook_url`
+- `TF_VAR_mackerel_slack_url`
 
 ## 適用
 

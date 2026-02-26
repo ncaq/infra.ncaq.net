@@ -8,8 +8,8 @@ variable "account_id" {
   type        = string
 }
 
-variable "mackerel_webhook_url" {
-  description = "Webhook URL for Mackerel notifications"
+variable "mackerel_slack_url" {
+  description = "Slack-compatible webhook URL for Mackerel notifications (e.g., Discord /slack endpoint)"
   type        = string
   sensitive   = true
 }
