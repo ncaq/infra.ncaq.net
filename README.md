@@ -93,6 +93,14 @@ Terraform変数はプレフィックス`TF_VAR_`を付けた環境変数で渡�
 
 APIキーは[Mackerelダッシュボード](https://mackerel.io/my?tab=apikeys)から作成できます。
 
+デバッグ用に使うmkrコマンドや、
+MCPが利用する環境変数名は以下の名前になります。
+
+- `MACKEREL_APIKEY`
+
+アンダースコアの有無が異なります。
+同じ値で大丈夫です。
+
 ## 適用
 
 ### 変更の確認
