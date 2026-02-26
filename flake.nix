@@ -33,10 +33,14 @@
 
           mackerelMcpServer = pkgs.callPackage ./pkgs/mackerel-mcp-server.nix { };
           mkr = pkgs.callPackage ./pkgs/mkr.nix { };
+          terraformMcpServer = pkgs.terraform-mcp-server;
         in
         {
           packages = {
-            inherit mackerelMcpServer;
+            inherit
+              mackerelMcpServer
+              terraformMcpServer
+              ;
           };
           treefmt.config = {
             projectRootFile = "flake.nix";
