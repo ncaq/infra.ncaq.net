@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "mackerel": {
+      "command": "nix",
+      "args": ["run", ".#mackerelMcpServer", "--"],
+      "env": {
+        "MACKEREL_APIKEY": "${MACKEREL_APIKEY}"
+      }
+    }
+  }
+}
