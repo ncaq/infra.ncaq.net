@@ -1,6 +1,11 @@
 {
   "permissions": {
-    "allow": ["Bash(tailscale status:*)", "Bash(terraform plan:*)", "Bash(terraform show:*)"]
+    "allow": [
+      "Bash(tailscale status:*)",
+      "Bash(terraform plan:*)",
+      "Bash(terraform providers:*)",
+      "Bash(terraform show:*)"
+    ]
   },
   "hooks": {
     "PostToolUse": [
