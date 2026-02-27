@@ -1,5 +1,13 @@
 {
   "mcpServers": {
+    "terraform": {
+      "command": "nix",
+      "args": ["run", ".#terraformMcpServer", "--", "stdio"]
+    },
+    "cloudflare": {
+      "type": "http",
+      "url": "https://mcp.cloudflare.com/mcp"
+    },
     "mackerel": {
       "command": "nix",
       "args": ["run", ".#mackerelMcpServer", "--"],
