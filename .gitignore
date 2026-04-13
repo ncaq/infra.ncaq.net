@@ -40,6 +40,13 @@ terraform.rc
 # End of https://www.toptal.com/developers/gitignore/api/terraform
 
 # Nix
-.direnv/
+
+# Ignore build outputs from performing a nix-build or `nix build` command
+result
+result-*
+
+# Ignore automatically generated direnv output
+.direnv
+
+# Ignore local override env
 .env.local
-result*

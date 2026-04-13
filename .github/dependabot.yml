@@ -2,16 +2,20 @@ version: 2
 updates:
   - package-ecosystem: github-actions
     directory: "/"
-    schedule:
-      interval: daily
+    open-pull-requests-limit: 20
     labels:
       - "Type: CI"
       - "Type: Dependencies"
-    open-pull-requests-limit: 20
+    schedule:
+      interval: daily
+    cooldown:
+      default-days: 7
   - package-ecosystem: terraform
     directory: "/"
-    schedule:
-      interval: weekly
+    open-pull-requests-limit: 20
     labels:
       - "Type: Dependencies"
-    open-pull-requests-limit: 20
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
