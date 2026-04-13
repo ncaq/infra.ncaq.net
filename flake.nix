@@ -1,9 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
-
     flake-parts.url = "github:hercules-ci/flake-parts";
-
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -11,37 +9,38 @@
   };
 
   outputs =
-    inputs@{ flake-parts, treefmt-nix, ... }:
+    inputs@{
+      flake-parts,
+      treefmt-nix,
+      ...
+    }:
     flake-parts.lib.mkFlake { inherit inputs; } {
-      imports = [ treefmt-nix.flakeModule ];
+      imports = [
+        treefmt-nix.flakeModule
+      ];
 
       systems = [ "x86_64-linux" ];
 
       perSystem =
-        { lib, system, ... }:
+        {
+          lib,
+          system,
+          ...
+        }:
         let
-          allowlistedLicenses = with lib.licenses; [
-            bsl11 # Terraformを使うので許可します。個人的にもAGPLがフリーでbsl11がフリーじゃないのはあまり納得感がない。
-          ];
-          nixpkgsConfig = {
-            inherit allowlistedLicenses;
-          };
           pkgs = import inputs.nixpkgs {
             inherit system;
-            config = nixpkgsConfig;
+            config = {
+              allowlistedLicenses = with lib.licenses; [
+                bsl11 # Terraformを使うので許可します。個人的にもAGPLがフリーでbsl11がフリーじゃないのはあまり納得感がない。
+              ];
+            };
           };
 
-          mackerelMcpServer = pkgs.callPackage ./pkgs/mackerel-mcp-server.nix { };
+          mackerel-mcp-server = pkgs.callPackage ./pkgs/mackerel-mcp-server.nix { };
           mkr = pkgs.callPackage ./pkgs/mkr.nix { };
-          terraformMcpServer = pkgs.terraform-mcp-server;
         in
         {
-          packages = {
-            inherit
-              mackerelMcpServer
-              terraformMcpServer
-              ;
-          };
           treefmt.config = {
             projectRootFile = "flake.nix";
             programs = {
@@ -52,31 +51,20 @@
               prettier.enable = true;
               shellcheck.enable = true;
               shfmt.enable = true;
+              statix.enable = true;
               terraform.enable = true;
               typos.enable = true;
               zizmor.enable = true;
-
-              statix = {
-                enable = true;
-                disabled-lints = [ "eta_reduction" ];
-              };
             };
             settings.formatter = {
               editorconfig-checker = {
-                command = pkgs.lib.getExe (
-                  pkgs.writeShellApplication {
-                    name = "editorconfig-checker";
-                    runtimeInputs = [ pkgs.editorconfig-checker ];
-                    text = ''
-                      editorconfig-checker -config .editorconfig-checker.json "$@"
-                    '';
-                  }
-                );
+                command = pkgs.editorconfig-checker;
                 includes = [ "*" ];
-                excludes = [ ".git/*" ];
               };
+              zizmor.options = [ "--pedantic" ];
             };
           };
+
           apps = {
             terraform-validate = {
               type = "app";
@@ -96,8 +84,40 @@
               );
             };
           };
+
+          packages = {
+            # flake.lockの管理バージョンをre-exportすることで安定した利用を促進。
+            inherit (pkgs)
+              nix-fast-build
+              terraform-mcp-server
+              ;
+            inherit
+              mackerel-mcp-server
+              ;
+          };
+
           devShells.default = pkgs.mkShell {
             buildInputs = with pkgs; [
+              # treefmtで指定したプログラムの単体版。
+              actionlint
+              deadnix
+              editorconfig-checker
+              nixfmt
+              prettier
+              shellcheck
+              shfmt
+              statix
+              typos
+              zizmor
+
+              # nixの関連ツール。
+              nil
+              nix-fast-build
+
+              # GitHub関連ツール。
+              gh
+
+              # インフラ関連ツール。
               cf-terraforming
               mkr
               sops
@@ -113,10 +133,14 @@
   nixConfig = {
     extra-substituters = [
       "https://cache.nixos.org/"
-      "https://nix-community.cachix.org"
+      "https://niks3-public.ncaq.net/"
+      "https://ncaq.cachix.org/"
+      "https://nix-community.cachix.org/"
     ];
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "niks3-public.ncaq.net-1:e/B9GomqDchMBmx3IW/TMQDF8sjUCQzEofKhpehXl04="
+      "ncaq.cachix.org-1:XF346GXI2n77SB5Yzqwhdfo7r0nFcZBaHsiiMOEljiE="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };

@@ -1,8 +1,19 @@
 {
   "mcpServers": {
+    "deepwiki": {
+      "type": "http",
+      "url": "https://mcp.deepwiki.com/mcp"
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_TOKEN}"
+      }
+    },
     "terraform": {
       "command": "nix",
-      "args": ["run", ".#terraformMcpServer", "--", "stdio"]
+      "args": ["run", ".#terraform-mcp-server", "--", "stdio"]
     },
     "cloudflare": {
       "type": "http",
@@ -10,7 +21,7 @@
     },
     "mackerel": {
       "command": "nix",
-      "args": ["run", ".#mackerelMcpServer", "--"],
+      "args": ["run", ".#mackerel-mcp-server", "--"],
       "env": {
         "MACKEREL_APIKEY": "${MACKEREL_APIKEY}"
       }
