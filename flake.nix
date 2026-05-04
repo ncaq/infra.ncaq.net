@@ -23,7 +23,6 @@
 
       perSystem =
         {
-          lib,
           system,
           ...
         }:
@@ -31,7 +30,7 @@
           pkgs = import inputs.nixpkgs {
             inherit system;
             config = {
-              allowlistedLicenses = with lib.licenses; [
+              allowlistedLicenses = with inputs.nixpkgs.lib.licenses; [
                 bsl11 # Terraformを使うので許可します。個人的にもAGPLがフリーでbsl11がフリーじゃないのはあまり納得感がない。
               ];
             };
