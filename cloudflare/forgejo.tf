@@ -8,7 +8,10 @@ resource "cloudflare_dns_record" "forgejo" {
 }
 
 # ssh接続でcloneやpushを行うためのアクセスポイントです。
-# 無料版のCloudflare Zero Trust Tunnelのhttpsでの一回での通信では転送量制限が厳しいのでsshで接続できるようにしています。
+# Cloudflare Zero Trust Tunnelは、
+# httpsでは一回での通信に転送量制限を厳しく設定していて、
+# 無料版ではそれを解除できません。
+# よってsshでも接続できるようにしています。
 # Tailscale経由でのみアクセス可能です。
 # CNAMEで`seminar.border-saurolophus.ts.net`を参照させたかったのですが、
 # WindowsとAndroidが現状CNAMEチェーンを追跡しないため、
