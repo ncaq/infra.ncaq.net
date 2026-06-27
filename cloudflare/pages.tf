@@ -16,14 +16,8 @@ resource "cloudflare_pages_project" "ncaq_net" {
   }
 
   deployment_configs = {
-    preview = {
-      build_image_major_version = 2
-      compatibility_date        = "2023-09-12"
-    }
-    production = {
-      build_image_major_version = 2
-      compatibility_date        = "2023-09-12"
-    }
+    preview    = {}
+    production = {}
   }
 }
 
@@ -72,14 +66,8 @@ resource "cloudflare_pages_project" "www_ncaq_net" {
   production_branch = "master"
 
   deployment_configs = {
-    preview = {
-      build_image_major_version = 1
-      compatibility_date        = "2023-03-01"
-    }
-    production = {
-      build_image_major_version = 1
-      compatibility_date        = "2023-03-01"
-    }
+    preview    = {}
+    production = {}
   }
 }
 
