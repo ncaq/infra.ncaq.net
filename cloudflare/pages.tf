@@ -10,8 +10,6 @@ resource "cloudflare_pages_project" "ncaq_net" {
       repo_name                      = "ncaq.net"
       production_deployments_enabled = false
       preview_deployment_setting     = "none"
-      preview_branch_includes        = ["*"]
-      path_includes                  = ["*"]
     }
   }
 
@@ -35,10 +33,8 @@ resource "cloudflare_pages_project" "cdn_ncaq_net" {
   source = {
     type = "github"
     config = {
-      owner                   = "ncaq"
-      repo_name               = "cdn.ncaq.net"
-      preview_branch_includes = ["*"]
-      path_includes           = ["*"]
+      owner     = "ncaq"
+      repo_name = "cdn.ncaq.net"
     }
   }
 
