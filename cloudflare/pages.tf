@@ -40,12 +40,10 @@ resource "cloudflare_pages_project" "cdn_ncaq_net" {
 
   deployment_configs = {
     preview = {
-      build_image_major_version = 2
-      compatibility_date        = "2023-08-19"
+      build_image_major_version = 3
     }
     production = {
-      build_image_major_version = 2
-      compatibility_date        = "2023-08-19"
+      build_image_major_version = 3
     }
   }
 }
