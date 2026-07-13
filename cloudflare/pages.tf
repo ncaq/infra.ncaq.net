@@ -25,35 +25,6 @@ resource "cloudflare_pages_domain" "ncaq_net_apex" {
   name         = "ncaq.net"
 }
 
-resource "cloudflare_pages_project" "cdn_ncaq_net" {
-  account_id        = var.account_id
-  name              = "cdn-ncaq-net"
-  production_branch = "master"
-
-  source = {
-    type = "github"
-    config = {
-      owner     = "ncaq"
-      repo_name = "cdn.ncaq.net"
-    }
-  }
-
-  deployment_configs = {
-    preview = {
-      build_image_major_version = 3
-    }
-    production = {
-      build_image_major_version = 3
-    }
-  }
-}
-
-resource "cloudflare_pages_domain" "cdn_ncaq_net_cdn" {
-  account_id   = var.account_id
-  project_name = cloudflare_pages_project.cdn_ncaq_net.name
-  name         = "cdn.ncaq.net"
-}
-
 resource "cloudflare_pages_project" "www_ncaq_net" {
   account_id        = var.account_id
   name              = "www-ncaq-net"

@@ -1,12 +1,3 @@
-resource "cloudflare_dns_record" "cdn" {
-  zone_id = var.zone_id
-  name    = "cdn.ncaq.net"
-  type    = "CNAME"
-  content = "cdn-ncaq-net.pages.dev"
-  proxied = true
-  ttl     = 1
-}
-
 resource "cloudflare_dns_record" "root" {
   zone_id = var.zone_id
   name    = "ncaq.net"
