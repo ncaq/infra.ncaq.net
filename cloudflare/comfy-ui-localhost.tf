@@ -7,7 +7,7 @@
 # Let's EncryptのDNS-01チャレンジ用のTXTレコードをCloudflareに置くために、
 # 名前解決可能なドメインとして所有権を確立すること。
 # プロキシは意味がないので必ず`false`。
-resource "cloudflare_dns_record" "comfy-ui-localhost-v4" {
+resource "cloudflare_dns_record" "comfy_ui_localhost_v4" {
   zone_id = var.zone_id
   name    = "comfy-ui.localhost.ncaq.net"
   type    = "A"
@@ -17,7 +17,7 @@ resource "cloudflare_dns_record" "comfy-ui-localhost-v4" {
 }
 
 # 一応IPv6向けのループバックレコードも登録しておきます。
-resource "cloudflare_dns_record" "comfy-ui-localhost-v6" {
+resource "cloudflare_dns_record" "comfy_ui_localhost_v6" {
   zone_id = var.zone_id
   name    = "comfy-ui.localhost.ncaq.net"
   type    = "AAAA"
