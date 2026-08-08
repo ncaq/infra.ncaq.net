@@ -2,6 +2,7 @@ resource "tailscale_acl" "this" {
   depends_on = [
     tailscale_service.comfyui,
     tailscale_service.ollama,
+    tailscale_service.open_webui,
   ]
 
   acl = jsonencode({
@@ -71,6 +72,16 @@ resource "tailscale_acl" "this" {
         dst = ["svc:comfyui"],
         ip  = ["tcp:443"],
       },
+      # tailnet内の端末から各ホストのOpen WebUI HTTPS endpointへアクセスを許可します。
+      {
+        src = concat([
+          "autogroup:member",
+          "tag:server",
+          "tag:comfyui",
+        ], local.ollama_tags),
+        dst = local.open_webui_services,
+        ip  = ["tcp:443"],
+      },
       # tailnet内の端末から各ホストのOllama HTTPS endpointへアクセスを許可します。
       {
         src = concat([
@@ -88,7 +99,8 @@ resource "tailscale_acl" "this" {
       # 対応するホストタグを持つ端末からのService広告を自動承認します。
       services = merge(
         { "svc:comfyui" = ["tag:comfyui"] },
-        { for host in local.ollama_hosts : "svc:ollama-${host}" => ["tag:ollama-${host}"] }
+        { for host in local.ollama_hosts : "svc:ollama-${host}" => ["tag:ollama-${host}"] },
+        { for host in local.ollama_hosts : "svc:open-webui-${host}" => ["tag:ollama-${host}"] }
       )
     },
     # serverがfunnelを使えるようにします。
