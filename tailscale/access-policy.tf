@@ -43,8 +43,11 @@ resource "tailscale_acl" "this" {
       },
       {
         src = ["tag:comfyui"],
-        dst = ["autogroup:member", "autogroup:internet", "tag:server"],
-        ip  = ["*"],
+        dst = concat(
+          ["autogroup:member", "autogroup:internet", "tag:server"],
+          local.ollama_tags
+        ),
+        ip = ["*"],
       },
       # Ollamaタグを付与した端末にもタグ付与前と同等のIPアクセスを維持します。
       {
