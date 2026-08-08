@@ -4,6 +4,8 @@ locals {
     "creep",
     "seminar",
   ])
+  ollama_tags     = [for host in local.ollama_hosts : "tag:ollama-${host}"]
+  ollama_services = [for host in local.ollama_hosts : "svc:ollama-${host}"]
 }
 
 # ComfyUIへ安定したMagicDNS名とTailVIPを割り当てます。
