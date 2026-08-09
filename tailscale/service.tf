@@ -1,12 +1,12 @@
 locals {
   ollama_hosts = toset([
     "bullet",
-    "creep",
     "seminar",
   ])
-  ollama_tags         = [for host in local.ollama_hosts : "tag:ollama-${host}"]
-  ollama_services     = [for host in local.ollama_hosts : "svc:ollama-${host}"]
-  open_webui_services = [for host in local.ollama_hosts : "svc:open-webui-${host}"]
+  ollama_tags     = [for host in local.ollama_hosts : "tag:ollama-${host}"]
+  ollama_services = [for host in local.ollama_hosts : "svc:ollama-${host}"]
+  # Open WebUIはチャット履歴を1箇所へまとめるため常時起動のseminarだけで動かします。
+  open_webui_host = "seminar"
 }
 
 # ComfyUIへ安定したMagicDNS名とTailVIPを割り当てます。
@@ -23,10 +23,10 @@ resource "tailscale_service" "ollama" {
   ports = ["tcp:443"]
 }
 
-# 各ホストのOpen WebUIへ安定したMagicDNS名とTailVIPを割り当てます。
+# Open WebUIへ安定したMagicDNS名とTailVIPを割り当てます。
+# 推論はOpen WebUI側でbulletのOllamaへ優先的に振り分けるため、
+# UIを公開するホストが変わってもここは1つで足ります。
 resource "tailscale_service" "open_webui" {
-  for_each = local.ollama_hosts
-
-  name  = "svc:open-webui-${each.key}"
+  name  = "svc:open-webui"
   ports = ["tcp:443"]
 }
