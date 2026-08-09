@@ -7,16 +7,9 @@ resource "tailscale_acl" "this" {
 
   acl = jsonencode({
     tagOwners = merge({
-      # サーバをautogroupから剥がすことで`tailscale ssh`アクセスを禁止します。
-      # Tailscaleに接続できて、
-      # SSH鍵を持っている。
-      # という二段階のガードを設定するにあたって、
-      # Tailscaleだけでssh出来てしまうと意味がないからです。
-      # クライアントが一時的に立ち上げる場合パスワード認証よりはマシなので、
-      # 全体的には禁止しません。
-      "tag:server" = ["autogroup:admin", "tag:server"],
       # Terraformで使用するdotfiles-sops OAuthクライアントにはtag:serverが設定されているため、
       # そのクライアントからServiceホスト用タグを付与できるようにします。
+      "tag:server"  = ["autogroup:admin", "tag:server"],
       "tag:comfyui" = ["autogroup:admin", "tag:server"],
       },
       { for tag in local.ollama_tags : tag => ["autogroup:admin", "tag:server"] }
@@ -103,13 +96,5 @@ resource "tailscale_acl" "this" {
         { (tailscale_service.open_webui.name) = ["tag:ollama-${local.open_webui_host}"] }
       )
     },
-    ssh = [
-      {
-        action = "check",
-        src    = ["autogroup:member"],
-        dst    = ["autogroup:self"],
-        users  = ["autogroup:nonroot"],
-      }
-    ],
   })
 }
