@@ -1,7 +1,6 @@
 locals {
   ollama_hosts = toset([
     "bullet",
-    "creep",
     "seminar",
   ])
   ollama_tags         = [for host in local.ollama_hosts : "tag:ollama-${host}"]

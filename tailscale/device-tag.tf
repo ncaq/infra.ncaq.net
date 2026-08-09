@@ -4,12 +4,6 @@ resource "tailscale_device_tags" "bullet" {
   depends_on = [tailscale_acl.this]
 }
 
-resource "tailscale_device_tags" "creep" {
-  device_id  = data.tailscale_device.this["creep"].id
-  tags       = ["tag:ollama-creep"]
-  depends_on = [tailscale_acl.this]
-}
-
 resource "tailscale_device_tags" "seminar" {
   device_id  = data.tailscale_device.this["seminar"].id
   tags       = ["tag:server", "tag:ollama-seminar"]
