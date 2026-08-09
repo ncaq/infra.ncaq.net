@@ -103,13 +103,6 @@ resource "tailscale_acl" "this" {
         { (tailscale_service.open_webui.name) = ["tag:ollama-${local.open_webui_host}"] }
       )
     },
-    # serverがfunnelを使えるようにします。
-    nodeAttrs = [
-      {
-        target = ["tag:server"]
-        attr   = ["funnel"]
-      },
-    ]
     ssh = [
       {
         action = "check",
