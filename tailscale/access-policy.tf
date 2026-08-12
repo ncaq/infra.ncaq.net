@@ -55,7 +55,9 @@ resource "tailscale_acl" "this" {
         ip = ["*"],
       },
       # tailnetのユーザー所有端末とServiceホスト自身から、
-      # ComfyUIのHTTPS endpointだけへアクセスを許可します。
+      # ComfyUIのendpointだけへアクセスを許可します。
+      # 許可するポートはServiceが公開するポートに揃えます。
+      # HTTPの80番はHTTPSへリダイレクトを返すだけです。
       {
         src = concat([
           "autogroup:member",
@@ -63,9 +65,9 @@ resource "tailscale_acl" "this" {
           "tag:comfyui",
         ], local.ollama_tags),
         dst = ["svc:comfyui"],
-        ip  = ["tcp:443"],
+        ip  = local.service_ports,
       },
-      # tailnet内の端末からOpen WebUIのHTTPS endpointへアクセスを許可します。
+      # tailnet内の端末からOpen WebUIのendpointへアクセスを許可します。
       {
         src = concat([
           "autogroup:member",
@@ -73,9 +75,9 @@ resource "tailscale_acl" "this" {
           "tag:comfyui",
         ], local.ollama_tags),
         dst = [tailscale_service.open_webui.name],
-        ip  = ["tcp:443"],
+        ip  = local.service_ports,
       },
-      # tailnet内の端末から各ホストのOllama HTTPS endpointへアクセスを許可します。
+      # tailnet内の端末から各ホストのOllama endpointへアクセスを許可します。
       {
         src = concat([
           "autogroup:member",
@@ -83,7 +85,7 @@ resource "tailscale_acl" "this" {
           "tag:comfyui",
         ], local.ollama_tags),
         dst = local.ollama_services,
-        ip  = ["tcp:443"],
+        ip  = local.service_ports,
       },
     ],
     # 指定されたタグ付きのデバイスもexit nodeとしては自動承認します。
