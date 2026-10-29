@@ -3,6 +3,7 @@ resource "tailscale_acl" "this" {
     tailscale_service.comfyui,
     tailscale_service.ollama,
     tailscale_service.open_webui,
+    tailscale_service.niks3_private,
   ]
 
   acl = jsonencode({
@@ -87,6 +88,18 @@ resource "tailscale_acl" "this" {
         dst = local.ollama_services,
         ip  = local.service_ports,
       },
+      # tailnet内の端末からniks3-privateのバイナリキャッシュへアクセスを許可します。
+      # 各ホストのnix-daemonがsubstituterとして読み、
+      # niks3-auto-uploadが書き込みに使うため、全ての種類のホストから到達できる必要があります。
+      {
+        src = concat([
+          "autogroup:member",
+          "tag:server",
+          "tag:comfyui",
+        ], local.ollama_tags),
+        dst = [tailscale_service.niks3_private.name],
+        ip  = local.service_ports,
+      },
     ],
     # 指定されたタグ付きのデバイスもexit nodeとしては自動承認します。
     autoApprovers = {
@@ -95,7 +108,9 @@ resource "tailscale_acl" "this" {
       services = merge(
         { "svc:comfyui" = ["tag:comfyui"] },
         { for host in local.ollama_hosts : "svc:ollama-${host}" => ["tag:ollama-${host}"] },
-        { (tailscale_service.open_webui.name) = ["tag:ollama-${local.open_webui_host}"] }
+        { (tailscale_service.open_webui.name) = ["tag:ollama-${local.open_webui_host}"] },
+        # niks3-privateを公開するseminarはtag:serverを持ちます。
+        { (tailscale_service.niks3_private.name) = ["tag:server"] }
       )
     },
   })
