@@ -1,6 +1,6 @@
 locals {
   # ServiceがHTTPSに加えてHTTPも受け付けるようにします。
-  # 80番はdotfilesの`nixos/tailscale-serve/http-redirect.nix`のCaddyへ繋がり、
+  # 80番はdotfilesの`lib/tailscale-serve.nix`のCaddyへ繋がり、
   # HTTPSへリダイレクトを返すだけで中身は何も出しません。
   # 閉じたままだと`http://`で飛んできた時にTCP接続ごと拒否されて、
   # URL補完から辿り着けません。
@@ -34,5 +34,12 @@ resource "tailscale_service" "ollama" {
 # UIを公開するホストが変わってもここは1つで足ります。
 resource "tailscale_service" "open_webui" {
   name  = "svc:open-webui"
+  ports = local.service_ports
+}
+
+# tailnet専用のNixバイナリキャッシュniks3-privateへ安定したMagicDNS名とTailVIPを割り当てます。
+# 公開するのは常時起動のseminarだけなのでService名にホスト名は入れません。
+resource "tailscale_service" "niks3_private" {
+  name  = "svc:niks3-private"
   ports = local.service_ports
 }
