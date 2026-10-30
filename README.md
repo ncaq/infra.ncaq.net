@@ -60,6 +60,7 @@ Terraform変数はプレフィックス`TF_VAR_`を付けた環境変数で渡�
 - Zone:Email Routing
 - Zone:Firewall Services
 - Zone:Page Rules
+- Zone:SSL and Certificates
 - Zone:zone_settings
 
 ### Tailscale
