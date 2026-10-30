@@ -101,8 +101,7 @@ APIキーは、
 [Mackerelダッシュボード](https://mackerel.io/my?tab=apikeys)
 から作成できます。
 
-デバッグ用に使うmkrコマンドや、
-MCPが利用する環境変数名は以下の名前になります。
+デバッグ用に使うmkrコマンドが利用する環境変数名は以下の名前になります。
 
 - `MACKEREL_APIKEY`
 
