@@ -36,7 +36,6 @@
             };
           };
 
-          mackerel-mcp-server = pkgs.callPackage ./pkgs/mackerel-mcp-server.nix { };
           mkr = pkgs.callPackage ./pkgs/mkr.nix { };
         in
         {
@@ -89,9 +88,6 @@
             inherit (pkgs)
               nix-fast-build
               terraform-mcp-server
-              ;
-            inherit
-              mackerel-mcp-server
               ;
           };
 
