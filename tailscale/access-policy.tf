@@ -111,21 +111,17 @@ resource "tailscale_acl" "this" {
       # `autogroup:internet`にはプライベートアドレスが含まれないため、
       # 別途許可しないとseminarのパケットフィルタで捨てられてキャッシュに繋がりません。
       #
-      # アドレスはdotfilesの`nixos/host/seminar/machine-mapping.nix`の、
-      # `machineAddresses.garage.host`と`machineAddresses.niks3-public.host`に揃えます。
       # 許可だけでは足りず、seminarがこのアドレスをサブネットルートとして広告する必要があります。
       # 広告はdotfilesの`nixos/host/seminar/tailscale-exit-node.nix`で、承認は`subnet-route.tf`です。
+      # アドレスは承認と同じ`local.seminar_caddy_internal_routes`から取ります。
       {
         src = concat([
           "autogroup:member",
           "tag:server",
           "tag:comfyui",
         ], local.ollama_tags),
-        dst = [
-          "192.168.100.60/32",
-          "192.168.100.70/32",
-        ],
-        ip = ["tcp:443"],
+        dst = values(local.seminar_caddy_internal_routes),
+        ip  = ["tcp:443"],
       },
     ],
     # 指定されたタグ付きのデバイスもexit nodeとしては自動承認します。
