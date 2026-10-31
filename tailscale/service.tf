@@ -11,6 +11,16 @@ locals {
   ])
   ollama_tags     = [for host in local.ollama_hosts : "tag:ollama-${host}"]
   ollama_services = [for host in local.ollama_hosts : "svc:ollama-${host}"]
+  # tailnet内の全ての端末を表すsrcの集合です。
+  # ユーザ所有の端末に加えて、
+  # タグを付けるとautogroup:memberから外れるServiceホストの各タグを含めます。
+  # Serviceや内部アドレスへのgrantは全てこの集合から許可するので、
+  # タグを増やした時にgrantごとに書き漏らさないよう1箇所にまとめます。
+  tailnet_all_sources = concat([
+    "autogroup:member",
+    "tag:server",
+    "tag:comfyui",
+  ], local.ollama_tags)
   # Open WebUIはチャット履歴を1箇所へまとめるため常時起動のseminarだけで動かします。
   open_webui_host = "seminar"
 }
