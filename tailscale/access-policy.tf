@@ -109,7 +109,7 @@ resource "tailscale_acl" "this" {
       # `/etc/hosts`でコンテナのvethのホスト側アドレスへ向けているので、
       # exit node経由の端末にもその内部アドレスが返ります。
       # `autogroup:internet`にはプライベートアドレスが含まれないため、
-      # 別途許可しないとseminarのパケットフィルタで捨てられてキャッシュに繋がりません。
+      # 別途許可しないとseminarのパケットフィルタで捨てられてniks3-publicやgarageに繋がりません。
       #
       # 許可だけでは足りず、seminarがこのアドレスをサブネットルートとして広告する必要があります。
       # 広告はdotfilesの`nixos/host/seminar/tailscale-exit-node.nix`で、承認は`subnet-route.tf`です。
