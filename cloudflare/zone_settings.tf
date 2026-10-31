@@ -15,7 +15,7 @@ resource "cloudflare_zone_setting" "security_header" {
       max_age            = 31536000
       include_subdomains = true
       preload            = true
-      nosniff            = false
+      nosniff            = true
     }
   }
 }
