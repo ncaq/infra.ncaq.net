@@ -23,7 +23,7 @@ resource "cloudflare_zone_setting" "security_header" {
 resource "cloudflare_zone_setting" "ssl" {
   zone_id    = var.zone_id
   setting_id = "ssl"
-  value      = "flexible"
+  value      = "strict"
 }
 
 resource "cloudflare_zone_setting" "cache_level" {
