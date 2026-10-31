@@ -104,6 +104,30 @@ resource "tailscale_acl" "this" {
         ip  = ["tcp:443"],
       },
     ],
+    # ポリシーを保存する時にTailscale側で評価されるテストです。
+    # 失敗すると保存が拒否されて`terraform apply`も失敗するので、
+    # grantのリグレッションをapplyの時点で検出できます。
+    #
+    # seminarのCaddyの内部アドレスは443だけ開いているべきで、
+    # それ以外のポートは閉じているべきです。
+    # srcの集合やipを後から変えた時に、
+    # 意図しない開放や閉塞を検出するために両方を固定します。
+    # srcにはautogroupを書けないので、
+    # 集合に含まれる代表としてServiceホストのタグを使います。
+    # 宛先にCIDRは書けないため、`cidrhost`でアドレスだけを取り出します。
+    tests = [
+      for src in ["tag:server", "tag:ollama-bullet"] : {
+        src    = src
+        proto  = "tcp"
+        accept = [for route in values(local.seminar_caddy_internal_routes) : "${cidrhost(route, 0)}:443"]
+        deny = flatten([
+          for route in values(local.seminar_caddy_internal_routes) : [
+            "${cidrhost(route, 0)}:22",
+            "${cidrhost(route, 0)}:80",
+          ]
+        ])
+      }
+    ],
     # 指定されたタグ付きのデバイスもexit nodeとしては自動承認します。
     autoApprovers = {
       exitNode = ["tag:server"],
