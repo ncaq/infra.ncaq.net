@@ -60,31 +60,19 @@ resource "tailscale_acl" "this" {
       # 許可するポートはServiceが公開するポートに揃えます。
       # HTTPの80番はHTTPSへリダイレクトを返すだけです。
       {
-        src = concat([
-          "autogroup:member",
-          "tag:server",
-          "tag:comfyui",
-        ], local.ollama_tags),
+        src = local.tailnet_all_sources,
         dst = ["svc:comfyui"],
         ip  = local.service_ports,
       },
       # tailnet内の端末からOpen WebUIのendpointへアクセスを許可します。
       {
-        src = concat([
-          "autogroup:member",
-          "tag:server",
-          "tag:comfyui",
-        ], local.ollama_tags),
+        src = local.tailnet_all_sources,
         dst = [tailscale_service.open_webui.name],
         ip  = local.service_ports,
       },
       # tailnet内の端末から各ホストのOllama endpointへアクセスを許可します。
       {
-        src = concat([
-          "autogroup:member",
-          "tag:server",
-          "tag:comfyui",
-        ], local.ollama_tags),
+        src = local.tailnet_all_sources,
         dst = local.ollama_services,
         ip  = local.service_ports,
       },
@@ -92,11 +80,7 @@ resource "tailscale_acl" "this" {
       # 各ホストのnix-daemonがsubstituterとして読み、
       # niks3-auto-uploadが書き込みに使うため、全ての種類のホストから到達できる必要があります。
       {
-        src = concat([
-          "autogroup:member",
-          "tag:server",
-          "tag:comfyui",
-        ], local.ollama_tags),
+        src = local.tailnet_all_sources,
         dst = [tailscale_service.niks3_private.name],
         ip  = local.service_ports,
       },
@@ -115,11 +99,7 @@ resource "tailscale_acl" "this" {
       # 広告はdotfilesの`nixos/host/seminar/tailscale-exit-node.nix`で、承認は`subnet-route.tf`です。
       # アドレスは承認と同じ`local.seminar_caddy_internal_routes`から取ります。
       {
-        src = concat([
-          "autogroup:member",
-          "tag:server",
-          "tag:comfyui",
-        ], local.ollama_tags),
+        src = local.tailnet_all_sources,
         dst = values(local.seminar_caddy_internal_routes),
         ip  = ["tcp:443"],
       },
