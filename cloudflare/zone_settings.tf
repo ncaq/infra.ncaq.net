@@ -4,6 +4,22 @@ resource "cloudflare_zone_setting" "always_use_https" {
   value      = "on"
 }
 
+# HSTS Preloadの申請条件であるmax-age 1年以上、includeSubDomains、preloadを満たします。
+# 条件を満たさなくなるとリストから外されるので、値を下げる時は注意してください。
+resource "cloudflare_zone_setting" "security_header" {
+  zone_id    = var.zone_id
+  setting_id = "security_header"
+  value = {
+    strict_transport_security = {
+      enabled            = true
+      max_age            = 31536000
+      include_subdomains = true
+      preload            = true
+      nosniff            = false
+    }
+  }
+}
+
 resource "cloudflare_zone_setting" "ssl" {
   zone_id    = var.zone_id
   setting_id = "ssl"
