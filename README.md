@@ -112,11 +112,15 @@ Terraformが操作するリソースから逆算した最小限のスコープ�
 | `account_settings` | `tailscale_contacts`                                                              |
 | `feature_settings` | `tailscale_tailnet_settings`                                                      |
 
-管理画面で作成した時に`devices:posture_attributes`も付与されていました。
-Terraformは使いませんが、読み書きできるのは端末のposture属性だけなのでそのままにしています。
+`devices:posture_attributes`と`devices:core:read`も付与されます。
+Terraformが直接使うわけではありませんが、
+`policy_file`を付与する時はこの2つが必須と決められていて、
+管理画面で`policy_file`を選ぶと自動的に付与されます。
+`devices:core:read`は`devices:core`に含まれるため、
+実質的に増えるのは`devices:posture_attributes`だけです。
 
-スコープの一覧は
-[Scopes](https://tailscale.com/kb/1623/scopes)
+スコープの一覧と依存関係は
+[Trust credentials](https://tailscale.com/kb/1623/trust-credentials)
 を参照してください。
 
 #### タグ
