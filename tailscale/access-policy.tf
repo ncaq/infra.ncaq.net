@@ -15,6 +15,17 @@ resource "tailscale_acl" "this" {
       },
       { for tag in local.ollama_tags : tag => ["autogroup:admin", "tag:server"] }
     ),
+    # 以下の4つのgrantで、tailnet内の端末同士は方向を問わず全ポートで到達できます。
+    # これを意図的に絞っていません。
+    #
+    # 各ホストはNixOS側のファイアウォールで待ち受けポートを既に絞っていて、
+    # tailscale経由で受けているのはsshと認証付きのサービスだけです。
+    # ACLでさらにポートを絞っても二重になるだけで、
+    # 他のホストとの連携が崩れた時にどのホストからでもsshで入って直す運用を妨げます。
+    # sshはGPG由来の鍵で認証しているため、到達できること自体は問題にしていません。
+    #
+    # 代わりに下のtestsで、Serviceと内部アドレスが必要なポート以外を閉じていることと、
+    # sshが双方向で通ることを固定して、意図しない変更をapplyの時点で検出します。
     grants = [
       # タグを付与すると端末はautogroup:memberから外れるため、
       # タグ付与前のautogroup:memberと同じIPアクセスを維持します。
@@ -108,26 +119,52 @@ resource "tailscale_acl" "this" {
     # 失敗すると保存が拒否されて`terraform apply`も失敗するので、
     # grantのリグレッションをapplyの時点で検出できます。
     #
-    # seminarのCaddyの内部アドレスは443だけ開いているべきで、
-    # それ以外のポートは閉じているべきです。
-    # srcの集合やipを後から変えた時に、
-    # 意図しない開放や閉塞を検出するために両方を固定します。
     # srcにはautogroupを書けないので、
-    # 集合に含まれる代表としてServiceホストのタグを使います。
+    # autogroup:memberの代表としてユーザのメールアドレスを使い、
+    # タグ付きのServiceホストはタグをそのまま使います。
     # 宛先にCIDRは書けないため、`cidrhost`でアドレスだけを取り出します。
-    tests = [
-      for src in ["tag:server", "tag:ollama-bullet"] : {
-        src    = src
-        proto  = "tcp"
-        accept = [for route in values(local.seminar_caddy_internal_routes) : "${cidrhost(route, 0)}:443"]
-        deny = flatten([
-          for route in values(local.seminar_caddy_internal_routes) : [
-            "${cidrhost(route, 0)}:22",
-            "${cidrhost(route, 0)}:80",
-          ]
-        ])
-      }
-    ],
+    tests = concat(
+      # Serviceは80と443だけ開いているべきで、それ以外のポートは閉じているべきです。
+      # Serviceホスト自身の22番は下のsshのテストで別に見るため、
+      # ここで閉じていることを確認するのはServiceのTailVIP宛ての22番です。
+      [
+        for src in local.tailnet_test_sources : {
+          src    = src
+          proto  = "tcp"
+          accept = flatten([for svc in local.all_services : ["${svc}:80", "${svc}:443"]])
+          deny   = [for svc in local.all_services : "${svc}:22"]
+        }
+      ],
+      # seminarのCaddyの内部アドレスは443だけ開いているべきで、
+      # それ以外のポートは閉じているべきです。
+      # srcの集合やipを後から変えた時に、
+      # 意図しない開放や閉塞を検出するために両方を固定します。
+      [
+        for src in local.tailnet_test_sources : {
+          src    = src
+          proto  = "tcp"
+          accept = [for route in values(local.seminar_caddy_internal_routes) : "${cidrhost(route, 0)}:443"]
+          deny = flatten([
+            for route in values(local.seminar_caddy_internal_routes) : [
+              "${cidrhost(route, 0)}:22",
+              "${cidrhost(route, 0)}:80",
+            ]
+          ])
+        }
+      ],
+      # sshはユーザ端末からもServiceホストからも、
+      # 全てのServiceホストへ到達できるべきです。
+      # 他のホストとの連携が崩れた時にどこからでも入って直せる経路を固定します。
+      # grantは同じタグ同士の到達を許可していないため、
+      # srcと同じタグは宛先から外します。
+      [
+        for src in local.tailnet_test_sources : {
+          src    = src
+          proto  = "tcp"
+          accept = [for tag in local.service_host_tags : "${tag}:22" if tag != src]
+        }
+      ],
+    ),
     # 指定されたタグ付きのデバイスもexit nodeとしては自動承認します。
     autoApprovers = {
       exitNode = ["tag:server"],

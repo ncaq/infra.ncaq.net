@@ -11,16 +11,29 @@ locals {
   ])
   ollama_tags     = [for host in local.ollama_hosts : "tag:ollama-${host}"]
   ollama_services = [for host in local.ollama_hosts : "svc:ollama-${host}"]
-  # tailnet内の全ての端末を表すsrcの集合です。
-  # ユーザ所有の端末に加えて、
-  # タグを付けるとautogroup:memberから外れるServiceホストの各タグを含めます。
-  # Serviceや内部アドレスへのgrantは全てこの集合から許可するので、
-  # タグを増やした時にgrantごとに書き漏らさないよう1箇所にまとめます。
-  tailnet_all_sources = concat([
-    "autogroup:member",
+  # Serviceホストに付与するタグの集合です。
+  # タグを付けると端末はautogroup:memberから外れるため、
+  # grantのsrcやdstとtestsで、ユーザ端末とは別に列挙する必要があります。
+  service_host_tags = concat([
     "tag:server",
     "tag:comfyui",
   ], local.ollama_tags)
+  # tailnet内の全ての端末を表すsrcの集合です。
+  # ユーザ所有の端末に加えて、Serviceホストの各タグを含めます。
+  # Serviceや内部アドレスへのgrantは全てこの集合から許可するので、
+  # タグを増やした時にgrantごとに書き漏らさないよう1箇所にまとめます。
+  tailnet_all_sources = concat(["autogroup:member"], local.service_host_tags)
+  # testsのsrcに使う集合です。
+  # testsのsrcにはautogroupを書けないため、
+  # autogroup:memberの代表としてユーザのメールアドレスを使います。
+  tailnet_test_sources = concat([local.email], local.service_host_tags)
+  # tailnetに定義している全てのServiceです。
+  # testsでServiceが80と443以外を閉じていることを一括で確認するために使います。
+  all_services = concat([
+    tailscale_service.comfyui.name,
+    tailscale_service.open_webui.name,
+    tailscale_service.niks3_private.name,
+  ], local.ollama_services)
   # Open WebUIはチャット履歴を1箇所へまとめるため常時起動のseminarだけで動かします。
   open_webui_host = "seminar"
 }
