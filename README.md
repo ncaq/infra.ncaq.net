@@ -112,11 +112,12 @@ Terraformが操作するリソースから逆算した最小限のスコープ�
 | `account_settings` | `tailscale_contacts`                                                              |
 | `feature_settings` | `tailscale_tailnet_settings`                                                      |
 
-`networking_settings`も合わせて付与しています。
+管理画面で作成した時に`devices:posture_attributes`も付与されていました。
+Terraformは使いませんが、読み書きできるのは端末のposture属性だけなのでそのままにしています。
+
+スコープの一覧は
 [Scopes](https://tailscale.com/kb/1623/scopes)
-の一覧には載っていませんが管理画面では選択でき、
-`tailscale_tailnet_settings`のネットワーク関連項目に必要になる可能性があるため、
-動作確認が取れるまでは残しています。
+を参照してください。
 
 #### タグ
 
