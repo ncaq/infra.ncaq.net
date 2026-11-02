@@ -18,6 +18,11 @@ locals {
     "tag:server",
     "tag:comfyui",
   ], local.ollama_tags)
+  # Serviceホストのタグのうち、grantで自分自身のタグへの到達を許可していないものです。
+  # `tag:server`と`tag:comfyui`のgrantはdstに自分のタグを含めていません。
+  # Ollamaのタグはsrcとdstの両方に`local.ollama_tags`を使うため、自分自身へも到達できます。
+  # testsで自分自身への到達を期待から外す時にこの集合を使います。
+  tags_without_self_grant = ["tag:server", "tag:comfyui"]
   # tailnet内の全ての端末を表すsrcの集合です。
   # ユーザ所有の端末に加えて、Serviceホストの各タグを含めます。
   # Serviceや内部アドレスへのgrantは全てこの集合から許可するので、
