@@ -8,8 +8,9 @@ resource "tailscale_acl" "this" {
 
   acl = jsonencode({
     tagOwners = merge({
-      # Terraformで使用するdotfiles-sops OAuthクライアントにはtag:serverが設定されているため、
+      # Terraformで使用するOAuthクライアントにはtag:serverが設定されているため、
       # そのクライアントからServiceホスト用タグを付与できるようにします。
+      # クライアントの作り方はREADMEを参照してください。
       "tag:server"  = ["autogroup:admin", "tag:server"],
       "tag:comfyui" = ["autogroup:admin", "tag:server"],
       },
