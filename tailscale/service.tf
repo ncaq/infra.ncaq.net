@@ -5,22 +5,57 @@ locals {
   # 閉じたままだと`http://`で飛んできた時にTCP接続ごと拒否されて、
   # URL補完から辿り着けません。
   service_ports = ["tcp:80", "tcp:443"]
+  # Serviceの裏でCaddyが転送しているバックエンドのポートです。
+  # Serviceはこれらを公開せず、80と443だけを受けるべきです。
+  # `service_ports`やgrantの`ip`にバックエンドのポートをうっかり足した時に、
+  # testsのdenyで検出するために列挙しています。
+  # 値はdotfilesの各ホストの`tailscale-serve.nix`と`niks3-private.nix`に揃えます。
+  service_backend_ports = {
+    "open-webui"    = 8080
+    comfyui         = 8188
+    "niks3-private" = 5751
+    ollama          = 11434
+  }
   ollama_hosts = toset([
     "bullet",
     "seminar",
   ])
   ollama_tags     = [for host in local.ollama_hosts : "tag:ollama-${host}"]
   ollama_services = [for host in local.ollama_hosts : "svc:ollama-${host}"]
-  # tailnet内の全ての端末を表すsrcの集合です。
-  # ユーザ所有の端末に加えて、
-  # タグを付けるとautogroup:memberから外れるServiceホストの各タグを含めます。
-  # Serviceや内部アドレスへのgrantは全てこの集合から許可するので、
-  # タグを増やした時にgrantごとに書き漏らさないよう1箇所にまとめます。
-  tailnet_all_sources = concat([
-    "autogroup:member",
+  # Serviceホストに付与するタグの集合です。
+  # タグを付けると端末はautogroup:memberから外れるため、
+  # grantのsrcやdstとtestsで、ユーザ端末とは別に列挙する必要があります。
+  service_host_tags = concat([
     "tag:server",
     "tag:comfyui",
   ], local.ollama_tags)
+  # Serviceホストのタグのうち、grantで自分自身のタグへの到達を許可していないものです。
+  # `tag:server`と`tag:comfyui`のgrantはdstに自分のタグを含めていません。
+  # Ollamaのタグはsrcとdstの両方に`local.ollama_tags`を使うため、自分自身へも到達できます。
+  # testsで自分自身への到達を期待から外す時にこの集合を使います。
+  tags_without_self_grant = ["tag:server", "tag:comfyui"]
+  # tailnet内の全ての端末を表すsrcの集合です。
+  # ユーザ所有の端末に加えて、Serviceホストの各タグを含めます。
+  # Serviceや内部アドレスへのgrantは全てこの集合から許可するので、
+  # タグを増やした時にgrantごとに書き漏らさないよう1箇所にまとめます。
+  tailnet_all_sources = concat(["autogroup:member"], local.service_host_tags)
+  # testsのsrcに使う集合です。
+  # testsのsrcにはautogroupを書けないため、
+  # autogroup:memberの代表としてユーザのメールアドレスを使います。
+  tailnet_test_sources = concat([local.email], local.service_host_tags)
+  # tailnetに定義している全てのServiceです。
+  # testsでServiceが80と443以外を閉じていることを一括で確認するために使います。
+  # Terraformは「全てのService」を列挙していることを保証しないので、
+  # `tailscale_service`を追加した時はここにも足してください。
+  # 漏れるとそのServiceだけtestsの対象から外れ、黙って網羅性が落ちます。
+  all_services = concat(
+    [
+      tailscale_service.comfyui.name,
+      tailscale_service.open_webui.name,
+      tailscale_service.niks3_private.name,
+    ],
+    [for service in tailscale_service.ollama : service.name],
+  )
   # Open WebUIはチャット履歴を1箇所へまとめるため常時起動のseminarだけで動かします。
   open_webui_host = "seminar"
 }
