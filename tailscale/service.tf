@@ -45,11 +45,17 @@ locals {
   tailnet_test_sources = concat([local.email], local.service_host_tags)
   # tailnetに定義している全てのServiceです。
   # testsでServiceが80と443以外を閉じていることを一括で確認するために使います。
-  all_services = concat([
-    tailscale_service.comfyui.name,
-    tailscale_service.open_webui.name,
-    tailscale_service.niks3_private.name,
-  ], local.ollama_services)
+  # Terraformは「全てのService」を列挙していることを保証しないので、
+  # `tailscale_service`を追加した時はここにも足してください。
+  # 漏れるとそのServiceだけtestsの対象から外れ、黙って網羅性が落ちます。
+  all_services = concat(
+    [
+      tailscale_service.comfyui.name,
+      tailscale_service.open_webui.name,
+      tailscale_service.niks3_private.name,
+    ],
+    [for service in tailscale_service.ollama : service.name],
+  )
   # Open WebUIはチャット履歴を1箇所へまとめるため常時起動のseminarだけで動かします。
   open_webui_host = "seminar"
 }
