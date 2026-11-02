@@ -74,22 +74,67 @@ Terraform変数はプレフィックス`TF_VAR_`を付けた環境変数で渡�
 [Trust credentials - Tailscale](https://login.tailscale.com/admin/settings/trust-credentials)
 の画面でOAuthクライアントを作成して取得できます。
 
+#### OAuthクライアントをTerraformで管理しない理由
+
+Tailscaleプロバイダには`tailscale_oauth_client`リソースがあり、
+OAuthクライアント自体をTerraformで作ることもできますが、
+このリポジトリではあえて手作業で作成します。
+
+- Terraformが認証に使う資格情報をTerraform自身に管理させると、
+  作り直すたびにapplyの途中で`.env.sops`を手で差し替える工程が挟まり、
+  結局IaCだけでは完結しません
+- クライアントシークレットが`key`属性としてstateに平文で書かれます。
+  stateはTerraform Cloudに置いているため、
+  sopsで管理しているシークレットの置き場が1つ増えてしまいます
+
+Terraform Cloudのワークスペースは実行モードがlocalで、
+stateの保管だけに使っています。
+Terraformの実行もシークレットの読み込みも手元で行うため、
+OAuthクライアントを作り直した時に差し替えるのは`.env.sops`だけです。
+
 #### 必要な権限
 
+Terraformが操作するリソースから逆算した最小限のスコープです。
+使っていないスコープは付与しません。
+
 読み込み権限は`all:read`です。
+`data.tailscale_device`などのdata sourceの読み取りに使います。
 
 書き込み権限は以下です。
 
-- dns
-- policy_file
-- devices:core
-- devices:posture_attributes
-- devices:routes
-- webhooksservices
-- account_settings
-- feature_settings
-- services
-- networking_settings
+| スコープ           | 操作するリソース                                                                  |
+| ------------------ | --------------------------------------------------------------------------------- |
+| `policy_file`      | `tailscale_acl`                                                                   |
+| `devices:core`     | `tailscale_device_authorization`, `tailscale_device_key`, `tailscale_device_tags` |
+| `devices:routes`   | `tailscale_device_subnet_routes`                                                  |
+| `dns`              | `tailscale_dns_configuration`                                                     |
+| `services`         | `tailscale_service`                                                               |
+| `account_settings` | `tailscale_contacts`                                                              |
+| `feature_settings` | `tailscale_tailnet_settings`                                                      |
+
+`networking_settings`も合わせて付与しています。
+[Scopes](https://tailscale.com/kb/1623/scopes)
+の一覧には載っていませんが管理画面では選択でき、
+`tailscale_tailnet_settings`のネットワーク関連項目に必要になる可能性があるため、
+動作確認が取れるまでは残しています。
+
+#### タグ
+
+`devices:core`スコープを付与するOAuthクライアントにはタグが必須です。
+タグ付きのクライアントは、
+自分のタグが`tagOwners`で所有しているタグしか端末に付与できません。
+
+このクライアントには`tag:server`を付与します。
+`tailscale/access-policy.tf`の`tagOwners`では、
+`tag:server`が自分自身とServiceホスト用の各タグを所有するように書いてあり、
+これによってTerraformから`tailscale_device_tags`で各タグを付与できます。
+
+#### 端末の追加
+
+tailnet設定で端末承認を有効にしているため、
+新しい端末はログインしただけではtailnetに参加できません。
+`tailscale/device.tf`の`local.device`にMagicDNS名を追加してapplyすると、
+`tailscale_device_authorization`によって承認されます。
 
 ### Mackerel
 
