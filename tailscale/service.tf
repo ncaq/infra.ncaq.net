@@ -5,6 +5,17 @@ locals {
   # 閉じたままだと`http://`で飛んできた時にTCP接続ごと拒否されて、
   # URL補完から辿り着けません。
   service_ports = ["tcp:80", "tcp:443"]
+  # Serviceの裏でCaddyが転送しているバックエンドのポートです。
+  # Serviceはこれらを公開せず、80と443だけを受けるべきです。
+  # `service_ports`やgrantの`ip`にバックエンドのポートをうっかり足した時に、
+  # testsのdenyで検出するために列挙しています。
+  # 値はdotfilesの各ホストの`tailscale-serve.nix`と`niks3-private.nix`に揃えます。
+  service_backend_ports = {
+    "open-webui"    = 8080
+    comfyui         = 8188
+    "niks3-private" = 5751
+    ollama          = 11434
+  }
   ollama_hosts = toset([
     "bullet",
     "seminar",

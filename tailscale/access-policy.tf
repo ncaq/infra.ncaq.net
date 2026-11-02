@@ -129,14 +129,20 @@ resource "tailscale_acl" "this" {
     # 宛先にCIDRは書けないため、`cidrhost`でアドレスだけを取り出します。
     tests = concat(
       # Serviceは80と443だけ開いているべきで、それ以外のポートは閉じているべきです。
+      # 閉じていることの代表として、sshの22番と各Serviceのバックエンドのポートを確認します。
       # Serviceホスト自身の22番は下のsshのテストで別に見るため、
-      # ここで閉じていることを確認するのはServiceのTailVIP宛ての22番です。
+      # ここで確認するのはServiceのTailVIP宛てです。
       [
         for src in local.tailnet_test_sources : {
           src    = src
           proto  = "tcp"
           accept = flatten([for svc in local.all_services : ["${svc}:80", "${svc}:443"]])
-          deny   = [for svc in local.all_services : "${svc}:22"]
+          deny = flatten([
+            for svc in local.all_services : concat(
+              ["${svc}:22"],
+              [for port in values(local.service_backend_ports) : "${svc}:${port}"],
+            )
+          ])
         }
       ],
       # seminarのCaddyの内部アドレスは443だけ開いているべきで、
