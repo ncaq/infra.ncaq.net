@@ -51,9 +51,12 @@ Terraform変数はプレフィックス`TF_VAR_`を付けた環境変数で渡�
 
 書き込み権限は以下です。
 
+- Account:Access: Organizations, Identity Providers, and Groups
 - Account:Cloudflare Pages
 - Account:Cloudflare Tunnel
 - Account:Email Routing Address
+- Account:Notifications
+- Zone:Bot Management
 - Zone:Cache Rules
 - Zone:DNS
 - Zone:Dynamic Redirect
@@ -61,6 +64,8 @@ Terraform変数はプレフィックス`TF_VAR_`を付けた環境変数で渡�
 - Zone:Firewall Services
 - Zone:Page Rules
 - Zone:SSL and Certificates
+- Zone:Transform Rules
+- Zone:Zone
 - Zone:zone_settings
 
 ### Tailscale

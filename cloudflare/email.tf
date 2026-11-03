@@ -1,3 +1,9 @@
+# Email Routingの有効化。
+resource "cloudflare_email_routing_settings" "ncaq_net" {
+  zone_id            = var.zone_id
+  support_subaddress = false
+}
+
 # Email Routing宛先アドレス
 resource "cloudflare_email_routing_address" "gmail" {
   account_id = var.account_id
@@ -22,6 +28,13 @@ resource "cloudflare_email_routing_catch_all" "catch_all" {
       value = [cloudflare_email_routing_address.gmail.email]
     }
   ]
+}
+
+# Email Routingが使うMXとDKIMのレコード。
+# Cloudflareが所有する読み取り専用のレコードなので、
+# 個別のcloudflare_dns_recordとしては持たない。
+resource "cloudflare_email_routing_dns" "ncaq_net" {
+  zone_id = var.zone_id
 }
 
 # 認証
