@@ -42,6 +42,7 @@ resource "cloudflare_notification_policy" "universal_ssl" {
   }
 }
 
+# 緩和はCloudflareが自動で行うが、攻撃を受けたこと自体に気づけるようにする。
 resource "cloudflare_notification_policy" "dos_attack_l7" {
   account_id  = var.account_id
   name        = "HTTP DDoS Attack"
