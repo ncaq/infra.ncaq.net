@@ -1,3 +1,7 @@
+locals {
+  notification_email = "ncaq@ncaq.net"
+}
+
 resource "cloudflare_notification_policy" "passive_origin_monitoring" {
   account_id  = var.account_id
   name        = "Passive Origin Monitoring"
@@ -5,7 +9,7 @@ resource "cloudflare_notification_policy" "passive_origin_monitoring" {
   enabled     = true
   alert_type  = "real_origin_monitoring"
   mechanisms = {
-    email = [{ id = "ncaq@ncaq.net" }]
+    email = [{ id = local.notification_email }]
   }
 }
 
@@ -16,6 +20,6 @@ resource "cloudflare_notification_policy" "web_analytics_metrics_update" {
   enabled     = true
   alert_type  = "web_analytics_metrics_update"
   mechanisms = {
-    email = [{ id = "ncaq@ncaq.net" }]
+    email = [{ id = local.notification_email }]
   }
 }
