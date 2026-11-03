@@ -104,11 +104,6 @@ resource "cloudflare_zone_setting" "pinned" {
   value      = each.value
 }
 
-moved {
-  from = cloudflare_zone_setting.setting
-  to   = cloudflare_zone_setting.pinned
-}
-
 # 同じ設定を2つのリソースで管理すると、
 # applyのたびに互いの値を上書きして差分が収まらなくなる。
 check "zone_settings_not_duplicated" {
