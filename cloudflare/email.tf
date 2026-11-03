@@ -68,6 +68,8 @@ resource "cloudflare_dns_record" "mx_amazonses" {
   priority = 10
 }
 
+# `_spf.mx.cloudflare.net`はCloudflare Email Routingの転送に必要。
+# `-all`なので、includeを消すとその経路のメールは全て拒否される。
 resource "cloudflare_dns_record" "txt_spf_root" {
   zone_id = var.zone_id
   name    = "ncaq.net"
