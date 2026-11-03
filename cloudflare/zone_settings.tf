@@ -96,10 +96,33 @@ locals {
   }
 }
 
-resource "cloudflare_zone_setting" "setting" {
+resource "cloudflare_zone_setting" "pinned" {
   for_each = local.zone_settings
 
   zone_id    = var.zone_id
   setting_id = each.key
   value      = each.value
+}
+
+moved {
+  from = cloudflare_zone_setting.setting
+  to   = cloudflare_zone_setting.pinned
+}
+
+# 同じ設定を2つのリソースで管理すると、
+# applyのたびに互いの値を上書きして差分が収まらなくなる。
+check "zone_settings_not_duplicated" {
+  assert {
+    condition = length(setintersection(keys(local.zone_settings), [
+      cloudflare_zone_setting.always_online.setting_id,
+      cloudflare_zone_setting.always_use_https.setting_id,
+      cloudflare_zone_setting.browser_cache_ttl.setting_id,
+      cloudflare_zone_setting.browser_check.setting_id,
+      cloudflare_zone_setting.cache_level.setting_id,
+      cloudflare_zone_setting.challenge_ttl.setting_id,
+      cloudflare_zone_setting.security_header.setting_id,
+      cloudflare_zone_setting.ssl.setting_id,
+    ])) == 0
+    error_message = "local.zone_settingsのキーが個別のcloudflare_zone_settingリソースと重複しています。"
+  }
 }
