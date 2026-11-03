@@ -66,6 +66,7 @@ Terraform変数はプレフィックス`TF_VAR_`を付けた環境変数で渡�
 - Zone:SSL and Certificates
 - Zone:Transform Rules
 - Zone:Zone
+- Zone:Zone WAF
 - Zone:zone_settings
 
 ### Tailscale
