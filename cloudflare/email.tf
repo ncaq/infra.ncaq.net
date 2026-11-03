@@ -38,11 +38,16 @@ resource "cloudflare_email_routing_dns" "ncaq_net" {
 }
 
 # 認証
+# 正規の送信経路はResendだけで、DKIMとSPFを通している。
+# SPFにamazonses.comがあるのはResendのバックエンドがSESだから。
+# DMARCレポート上でそれ以外の送信元は全てなりすましなので、
+# quarantineではなくrejectで弾く。
+# レポートはCloudflareのDMARC Managementに集約している。
 resource "cloudflare_dns_record" "txt_dmarc" {
   zone_id = var.zone_id
   name    = "_dmarc.ncaq.net"
   type    = "TXT"
-  content = "v=DMARC1;  p=quarantine; rua=mailto:9ebd3e36b8184ac595e59834e3c55330@dmarc-reports.cloudflare.net"
+  content = "v=DMARC1; p=reject; rua=mailto:9ebd3e36b8184ac595e59834e3c55330@dmarc-reports.cloudflare.net"
   ttl     = 1
 }
 
@@ -63,11 +68,13 @@ resource "cloudflare_dns_record" "mx_amazonses" {
   priority = 10
 }
 
+# `_spf.mx.cloudflare.net`はCloudflare Email Routingの転送に必要。
+# `-all`なので、includeを消すとその経路のメールは全て拒否される。
 resource "cloudflare_dns_record" "txt_spf_root" {
   zone_id = var.zone_id
   name    = "ncaq.net"
   type    = "TXT"
-  content = "v=spf1 include:_spf.mx.cloudflare.net include:amazonses.com ~all"
+  content = "v=spf1 include:_spf.mx.cloudflare.net include:amazonses.com -all"
   ttl     = 1
 }
 
@@ -75,7 +82,7 @@ resource "cloudflare_dns_record" "txt_spf_send" {
   zone_id = var.zone_id
   name    = "send"
   type    = "TXT"
-  content = "v=spf1 include:amazonses.com ~all"
+  content = "v=spf1 include:amazonses.com -all"
   ttl     = 1
 }
 

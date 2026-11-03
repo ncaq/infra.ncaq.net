@@ -11,9 +11,29 @@ resource "cloudflare_bot_management" "ncaq_net" {
   is_robots_txt_managed   = false
 }
 
+# Forgejoにログインフォームがあるので、
+# 漏洩済みの資格情報でのログイン試行を検出する。
+# 検出だけでは何も起きないため、下のカスタムルールでチャレンジを出す。
 resource "cloudflare_leaked_credential_check" "ncaq_net" {
   zone_id = var.zone_id
-  enabled = false
+  enabled = true
+}
+
+resource "cloudflare_ruleset" "firewall_custom" {
+  zone_id = var.zone_id
+  name    = "firewall custom"
+  kind    = "zone"
+  phase   = "http_request_firewall_custom"
+
+  rules = [
+    {
+      ref         = "leaked_password"
+      description = "漏洩済みのパスワードでの認証にはチャレンジを出す"
+      expression  = "(cf.waf.credential_check.password_leaked)"
+      action      = "managed_challenge"
+      enabled     = true
+    },
+  ]
 }
 
 resource "cloudflare_managed_transforms" "ncaq_net" {

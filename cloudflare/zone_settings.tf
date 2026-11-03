@@ -2,7 +2,7 @@
 # 一時的に切り替えるdevelopment_modeは含めない。
 locals {
   zone_settings = {
-    "0rtt"                    = "on"
+    "0rtt"                    = "off" # TLS 1.3の0-RTTで送られるearly dataはリプレイされうる。
     always_online             = "on"
     always_use_https          = "on"
     automatic_https_rewrites  = "off"
@@ -24,7 +24,7 @@ locals {
     ipv6                      = "on"
     log_to_cloudflare         = "on"
     max_upload                = 100
-    min_tls_version           = "1.0"
+    min_tls_version           = "1.2" # TLS 1.0と1.1はRFC 8996で廃止されている。
     opportunistic_encryption  = "on"
     opportunistic_onion       = "on"
     orange_to_orange          = "off"
@@ -41,13 +41,19 @@ locals {
         max_age            = 31536000
         include_subdomains = true
         preload            = true
-        nosniff            = true
+        nosniff            = true # HSTS Preloadの条件ではないが、Cloudflare側がここに配置している。
       }
     }
+    # 知識は自由であるべきなので、TorやVPNからの訪問者を排除しない。
+    # security_levelを上げるとIPの評判でチャレンジを出すようになり、
+    # nixやgitやS3クライアントのようにチャレンジを解けないクライアントが、
+    # 共有NATやVPN経由というだけで弾かれる。
+    # ボットのノイズを減らしたい時はゾーン全体の閾値を上げずに、
+    # WAFのカスタムルールで対象のパスを絞る。
     security_level      = "essentially_off"
     server_side_exclude = "off"
     ssl                 = "strict"
-    tls_1_3             = "zrt"
+    tls_1_3             = "on" # `zrt`は0-RTT込みの有効化なので、`on`に留める。
     tls_client_auth     = "off"
     visitor_ip          = "on"
     waf                 = "off"
