@@ -44,6 +44,12 @@ locals {
         nosniff            = true # HSTS Preloadの条件ではないが、Cloudflare側がここに配置している。
       }
     }
+    # 知識は自由であるべきなので、TorやVPNからの訪問者を排除しない。
+    # security_levelを上げるとIPの評判でチャレンジを出すようになり、
+    # nixやgitやS3クライアントのようにチャレンジを解けないクライアントが、
+    # 共有NATやVPN経由というだけで弾かれる。
+    # ボットのノイズを減らしたい時はゾーン全体の閾値を上げずに、
+    # WAFのカスタムルールで対象のパスを絞る。
     security_level      = "essentially_off"
     server_side_exclude = "off"
     ssl                 = "strict"
