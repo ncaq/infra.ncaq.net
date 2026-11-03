@@ -62,7 +62,6 @@ Terraform変数はプレフィックス`TF_VAR_`を付けた環境変数で渡�
 - Zone:Dynamic Redirect
 - Zone:Email Routing
 - Zone:Firewall Services
-- Zone:Page Rules
 - Zone:SSL and Certificates
 - Zone:Transform Rules
 - Zone:Zone
