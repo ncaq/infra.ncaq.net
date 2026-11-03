@@ -10,5 +10,5 @@
 resource "cloudflare_ct_alerting" "ncaq_net" {
   zone_id = var.zone_id
   enabled = true
-  emails  = ["ncaq@ncaq.net"]
+  emails  = [local.notification_email]
 }

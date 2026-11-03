@@ -48,7 +48,7 @@ resource "cloudflare_dns_record" "caa_iodef" {
   data = {
     flags = 0
     tag   = "iodef"
-    value = "mailto:ncaq@ncaq.net"
+    value = "mailto:${local.notification_email}"
   }
   ttl = 300
 }
