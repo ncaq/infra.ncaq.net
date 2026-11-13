@@ -1,5 +1,5 @@
 locals {
-  # seminar上のCaddyがniks3-publicとgarageを受けている、コンテナのvethのホスト側アドレスです。
+  # seminar上のCaddyがgarageを受けている、コンテナのvethのホスト側アドレスです。
   # exit nodeは`0.0.0.0/0`を広告していても自分のLANの範囲はパケットフィルタから外すため、
   # exit node経由の端末がここへ届くには別途サブネットルートとして広告と承認が要ります。
   # 広告する側はdotfilesの`nixos/host/seminar/tailscale-exit-node.nix`で、
@@ -9,8 +9,7 @@ locals {
   # 片方だけ変えると経路はあるのにACLで捨てられる状態になり、
   # Terraformでは検出できないので、1箇所にまとめています。
   seminar_caddy_internal_routes = {
-    garage         = "192.168.100.60/32"
-    "niks3-public" = "192.168.100.70/32"
+    garage = "192.168.100.60/32"
   }
 }
 

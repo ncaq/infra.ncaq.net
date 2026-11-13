@@ -100,15 +100,15 @@ resource "tailscale_acl" "this" {
         ip  = local.service_ports,
       },
       # seminarをexit nodeにしている端末から、
-      # seminar上のCaddyがniks3-publicとgarageを受けている内部アドレスへの接続を許可します。
+      # seminar上のCaddyがgarageを受けている内部アドレスへの接続を許可します。
       #
       # exit nodeを使う端末のDNSクエリはseminarのtailscaledが代理で解決し、
       # その答えにはseminarの`/etc/hosts`の内容が混ざります。
-      # seminarは`niks3-public.ncaq.net`と`garage.ncaq.net`をホスト内で完結させるため、
+      # seminarは`garage.ncaq.net`をホスト内で完結させるため、
       # `/etc/hosts`でコンテナのvethのホスト側アドレスへ向けているので、
       # exit node経由の端末にもその内部アドレスが返ります。
       # `autogroup:internet`にはプライベートアドレスが含まれないため、
-      # 別途許可しないとseminarのパケットフィルタで捨てられてniks3-publicやgarageに繋がりません。
+      # 別途許可しないとseminarのパケットフィルタで捨てられてgarageに繋がりません。
       #
       # 許可だけでは足りず、seminarがこのアドレスをサブネットルートとして広告する必要があります。
       # 広告はdotfilesの`nixos/host/seminar/tailscale-exit-node.nix`で、承認は`subnet-route.tf`です。
