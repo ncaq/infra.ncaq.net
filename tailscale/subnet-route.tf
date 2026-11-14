@@ -1,10 +1,13 @@
 locals {
   # seminar上のCaddyがgarageを受けている、コンテナのvethのホスト側アドレスです。
-  # exit nodeは`0.0.0.0/0`を広告していても自分のLANの範囲はパケットフィルタから外すため、
-  # exit node経由の端末がここへ届くには別途サブネットルートとして広告と承認が要ります。
+  # コンテナとのやり取りはIPv6で行うので、vethのホスト側アドレスはIPv6のULAです。
+  # exit nodeの`::/0`に任せると、
+  # exit node経由の端末がここへ届くかは`autogroup:internet`にULAが含まれるかどうかに依存します。
+  # 別途サブネットルートとして広告と承認をして、`access-policy.tf`で宛先を明示的に許可します。
+  # IPv4のアドレスだった頃は、
+  # exit nodeが自分のLANやRFC 1918の範囲をパケットフィルタから外すので、これが無いと届きませんでした。
   # 広告する側はdotfilesの`nixos/host/seminar/tailscale-exit-node.nix`で、
   # アドレスは`nixos/host/seminar/machine-mapping.nix`に揃えます。
-  # コンテナとのやり取りはIPv6で行うので、vethのホスト側アドレスはIPv6のULAです。
   #
   # 経路の承認と`access-policy.tf`の宛先の許可の両方がここを参照します。
   # 片方だけ変えると経路はあるのにACLで捨てられる状態になり、
