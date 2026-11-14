@@ -127,6 +127,8 @@ resource "tailscale_acl" "this" {
     # autogroup:memberの代表としてユーザのメールアドレスを使い、
     # タグ付きのServiceホストはタグをそのまま使います。
     # 宛先にCIDRは書けないため、`cidrhost`でアドレスだけを取り出します。
+    # 宛先は`host:port`の形で、IPv6アドレスは`[1:2:3::4]:80`のように角括弧で囲みます。
+    # https://tailscale.com/kb/1337/policy-syntax
     tests = concat(
       # Serviceは80と443だけ開いているべきで、それ以外のポートは閉じているべきです。
       # 閉じていることの代表として、sshの22番と各Serviceのバックエンドのポートを確認します。
@@ -153,11 +155,11 @@ resource "tailscale_acl" "this" {
         for src in local.tailnet_test_sources : {
           src    = src
           proto  = "tcp"
-          accept = [for route in values(local.seminar_caddy_internal_routes) : "${cidrhost(route, 0)}:443"]
+          accept = [for route in values(local.seminar_caddy_internal_routes) : "[${cidrhost(route, 0)}]:443"]
           deny = flatten([
             for route in values(local.seminar_caddy_internal_routes) : [
-              "${cidrhost(route, 0)}:22",
-              "${cidrhost(route, 0)}:80",
+              "[${cidrhost(route, 0)}]:22",
+              "[${cidrhost(route, 0)}]:80",
             ]
           ])
         }
