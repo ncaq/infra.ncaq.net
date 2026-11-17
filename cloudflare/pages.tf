@@ -25,6 +25,15 @@ resource "cloudflare_pages_domain" "ncaq_net_apex" {
   name         = "ncaq.net"
 }
 
+resource "cloudflare_dns_record" "root" {
+  zone_id = var.zone_id
+  name    = "ncaq.net"
+  type    = "CNAME"
+  content = "ncaq-net.pages.dev"
+  proxied = true
+  ttl     = 1
+}
+
 resource "cloudflare_pages_project" "www_ncaq_net" {
   account_id        = var.account_id
   name              = "www-ncaq-net"
@@ -40,4 +49,13 @@ resource "cloudflare_pages_domain" "www_ncaq_net_www" {
   account_id   = var.account_id
   project_name = cloudflare_pages_project.www_ncaq_net.name
   name         = "www.ncaq.net"
+}
+
+resource "cloudflare_dns_record" "www" {
+  zone_id = var.zone_id
+  name    = "www.ncaq.net"
+  type    = "CNAME"
+  content = "www-ncaq-net.pages.dev"
+  proxied = true
+  ttl     = 1
 }
