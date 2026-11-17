@@ -10,23 +10,26 @@ resource "random_password" "seminar" {
   special = false
 }
 
-# 以下はseminarがCloudflare Tunnel経由で公開しているサービスのレコード。
-
-# cdn.ncaq.netはseminarからCloudflare Tunnel経由で配信しています。
-# Pagesには1ファイル25MiBの制限があり配信できないファイルがあるため移行しました。
-# 配信設定はdotfilesのnixos/host/seminar/cdn.nixにあります。
-resource "cloudflare_dns_record" "cdn" {
-  zone_id = var.zone_id
-  name    = "cdn.ncaq.net"
-  type    = "CNAME"
-  content = "${cloudflare_zero_trust_tunnel_cloudflared.seminar.id}.cfargotunnel.com"
-  proxied = true
-  ttl     = 1
+locals {
+  # seminarがCloudflare Tunnel経由で公開しているサービスのホスト名。
+  # `<名前>.ncaq.net`がTunnelを向くCNAMEになる。
+  seminar_tunnel_hostnames = toset([
+    # cdn.ncaq.netはseminarからCloudflare Tunnel経由で配信しています。
+    # Pagesには1ファイル25MiBの制限があり配信できないファイルがあるため移行しました。
+    # 配信設定はdotfilesのnixos/host/seminar/cdn.nixにあります。
+    "cdn",
+    "forgejo",
+    "garage",
+    "mcp-nixos",
+    "niks3-public",
+  ])
 }
 
-resource "cloudflare_dns_record" "forgejo" {
+resource "cloudflare_dns_record" "seminar_tunnel" {
+  for_each = local.seminar_tunnel_hostnames
+
   zone_id = var.zone_id
-  name    = "forgejo.ncaq.net"
+  name    = "${each.key}.ncaq.net"
   type    = "CNAME"
   content = "${cloudflare_zero_trust_tunnel_cloudflared.seminar.id}.cfargotunnel.com"
   proxied = true
@@ -58,32 +61,5 @@ resource "cloudflare_dns_record" "forgejo_ssh_v6" {
   type    = "AAAA"
   content = var.seminar_tailscale_ipv6
   proxied = false
-  ttl     = 1
-}
-
-resource "cloudflare_dns_record" "garage" {
-  zone_id = var.zone_id
-  name    = "garage.ncaq.net"
-  type    = "CNAME"
-  content = "${cloudflare_zero_trust_tunnel_cloudflared.seminar.id}.cfargotunnel.com"
-  proxied = true
-  ttl     = 1
-}
-
-resource "cloudflare_dns_record" "mcp-nixos" {
-  zone_id = var.zone_id
-  name    = "mcp-nixos.ncaq.net"
-  type    = "CNAME"
-  content = "${cloudflare_zero_trust_tunnel_cloudflared.seminar.id}.cfargotunnel.com"
-  proxied = true
-  ttl     = 1
-}
-
-resource "cloudflare_dns_record" "niks3-public" {
-  zone_id = var.zone_id
-  name    = "niks3-public.ncaq.net"
-  type    = "CNAME"
-  content = "${cloudflare_zero_trust_tunnel_cloudflared.seminar.id}.cfargotunnel.com"
-  proxied = true
   ttl     = 1
 }
