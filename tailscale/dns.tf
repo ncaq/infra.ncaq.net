@@ -1,9 +1,14 @@
 resource "tailscale_dns_configuration" "this" {
   # ホストにTailscaleのDNS経由で接続できます。
   magic_dns = true
-  # システムのDNS設定を上書きします。
-  override_local_dns = true
-  # 以下のDNSサーバーを使用します。
+  # システムのDNS設定は上書きしません。
+  # 上書きするとsystemd-resolvedが全ての問い合わせをTailscaleのリゾルバへ流し、
+  # そのリンクではDNSSECの検証が無効になるので、
+  # 各端末が自分の設定で検証できるようにtailnetの名前だけをTailscaleに任せます。
+  # NixOSのホストはdotfilesの設定でDNS over TLSとDNSSECの検証を使い、
+  # AndroidはプライベートDNSを端末ごとに設定します。
+  override_local_dns = false
+  # 上書きしないので、以下のDNSサーバーは端末が自分のDNS設定を持たない時の予備です。
   # CloudflareとGoogleを混在させ、IPv6のサーバーを先に並べます。
   # dotfilesの`lib/public-dns.nix`と同じ方針で、同じ順に揃えています。
   # IPv6
