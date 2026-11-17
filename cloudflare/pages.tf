@@ -29,7 +29,7 @@ resource "cloudflare_dns_record" "root" {
   zone_id = var.zone_id
   name    = "ncaq.net"
   type    = "CNAME"
-  content = "ncaq-net.pages.dev"
+  content = cloudflare_pages_project.ncaq_net.subdomain
   proxied = true
   ttl     = 1
 }
@@ -55,7 +55,7 @@ resource "cloudflare_dns_record" "www" {
   zone_id = var.zone_id
   name    = "www.ncaq.net"
   type    = "CNAME"
-  content = "www-ncaq-net.pages.dev"
+  content = cloudflare_pages_project.www_ncaq_net.subdomain
   proxied = true
   ttl     = 1
 }
