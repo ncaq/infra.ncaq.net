@@ -13,23 +13,6 @@ resource "cloudflare_notification_policy" "passive_origin_monitoring" {
   }
 }
 
-# seminarのTunnelが落ちると配下のサービスが全て止まるので、
-# 接続状態の変化を通知する。
-# new_statusで状態を絞るフィルタはAPIが受け付けないため、復旧も通知される。
-resource "cloudflare_notification_policy" "tunnel_health" {
-  account_id  = var.account_id
-  name        = "Tunnel Health"
-  description = "Tunnelの接続状態が変わった時にメールで通知する"
-  enabled     = true
-  alert_type  = "tunnel_health_event"
-  filters = {
-    tunnel_id = [cloudflare_zero_trust_tunnel_cloudflared.seminar.id]
-  }
-  mechanisms = {
-    email = [{ id = local.notification_email }]
-  }
-}
-
 # Universal SSLの更新に失敗すると全ホストのHTTPSが切れる。
 resource "cloudflare_notification_policy" "universal_ssl" {
   account_id  = var.account_id
