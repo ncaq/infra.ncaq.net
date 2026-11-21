@@ -86,6 +86,20 @@ resource "cloudflare_dns_record" "txt_spf_send" {
   ttl     = 1
 }
 
+# Resend Forge経由で送る時のReturn-Path。
+# SPFとバウンス受信用のMXはCNAMEの先でResendが管理している。
+# プロキシを有効にするとResend側の検証に失敗する。
+# Forgeが配信できない時はSESにフォールバックするので、
+# `send`のレコードも残す必要がある。
+resource "cloudflare_dns_record" "cname_resend_forge" {
+  zone_id = var.zone_id
+  name    = "mail"
+  type    = "CNAME"
+  content = "send.forge.rmta.net"
+  proxied = false
+  ttl     = 1
+}
+
 # クライアント向けヒント
 resource "cloudflare_dns_record" "srv_imap" {
   zone_id  = var.zone_id
