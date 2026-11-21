@@ -168,6 +168,34 @@ Webhook通知の転送先URLはTerraform変数として管理します。
 
 - `TF_VAR_mackerel_slack_url`
 
+### Resend
+
+以下の環境変数を設定してください。
+
+- `RESEND_API_KEY`
+
+APIキーは、
+[Resendダッシュボード](https://resend.com/api-keys)
+から作成できます。
+ドメインの設定を読み書きするため、
+権限は`full_access`が必要です。
+
+Resendには公式のTerraformプロバイダが無いため、
+コミュニティ製の
+[jhoward321/resend](https://registry.terraform.io/providers/jhoward321/resend/latest)
+を使っています。
+
+#### APIキーをTerraformで管理しない理由
+
+プロバイダには`resend_api_key`リソースがありますが、
+このリポジトリではAPIキーを手作業で作成します。
+
+- ResendのAPIは作成後のキーのトークンも権限も返さないため、
+  プロバイダが`resend_api_key`のimportに対応していません。
+  既存のキーをコードに取り込むには作り直すしかなく、
+  各端末に配ったトークンが失効します
+- Terraformで作るとトークンがstateに平文で書かれます
+
 ## 適用
 
 ### 変更の確認
