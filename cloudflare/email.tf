@@ -39,7 +39,10 @@ resource "cloudflare_email_routing_dns" "ncaq_net" {
 
 # 認証
 # 正規の送信経路はResendだけで、DKIMとSPFを通している。
-# SPFにamazonses.comがあるのはResendのバックエンドがSESだから。
+# ResendはResend ForgeとSESのどちらかから送る。
+# Forgeから出るのは送信の一部で、
+# 残りとForgeが配信できない時のフォールバックはSESから出る。
+# SPFにamazonses.comがあるのはSESから出る分のため。
 # DMARCレポート上でそれ以外の送信元は全てなりすましなので、
 # quarantineではなくrejectで弾く。
 # レポートはCloudflareのDMARC Managementに集約している。
@@ -83,6 +86,20 @@ resource "cloudflare_dns_record" "txt_spf_send" {
   name    = "send"
   type    = "TXT"
   content = "v=spf1 include:amazonses.com -all"
+  ttl     = 1
+}
+
+# Resend Forge経由で送る時のReturn-Path。
+# SPFとバウンス受信用のMXはCNAMEの先でResendが管理している。
+# プロキシを有効にするとResend側の検証に失敗する。
+# Forgeを有効にしてもSESからの送信は残るので、
+# `send`のレコードも残す必要がある。
+resource "cloudflare_dns_record" "cname_resend_forge" {
+  zone_id = var.zone_id
+  name    = "mail"
+  type    = "CNAME"
+  content = "send.forge.rmta.net"
+  proxied = false
   ttl     = 1
 }
 
