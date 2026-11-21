@@ -44,6 +44,20 @@ provider "registry.terraform.io/hashicorp/random" {
   ]
 }
 
+provider "registry.terraform.io/jhoward321/resend" {
+  version     = "0.2.0"
+  constraints = "~> 0.2"
+  hashes = [
+    "h1:RPiMOPM9FINAeA+G4tH3uxcnPCpQ8AiKiCYcj+LWwKQ=",
+    "zh:497c01c768b354008a5419075a23a49c33ec7bd226683bffcf531bb554244dee",
+    "zh:4ae016be2f03b897992e0739dc233b23d29617ea15fa51de7294cd42c77f1506",
+    "zh:5c5189f8b5e3504c42f4844881fed578d432386f4071204566e1dbfe481e9c34",
+    "zh:8c77d8acab4b54090cd2d4f3a7875ff0fd0d4308aa9cb3f5da5d1f2efb33899a",
+    "zh:f8d1b1c0a0778fd54214a249110789d4a57421ef86c6117de7b6db0caae634a3",
+    "zh:fe09d8e4becb48943bb221a2c51a11bf4bc760cd4b1136fd5ac60737aea73d6f",
+  ]
+}
+
 provider "registry.terraform.io/mackerelio-labs/mackerel" {
   version     = "0.14.0"
   constraints = "~> 0.14"

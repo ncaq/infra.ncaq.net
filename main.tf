@@ -14,3 +14,7 @@ module "mackerel" {
   source    = "./mackerel"
   slack_url = var.mackerel_slack_url
 }
+
+module "resend" {
+  source = "./resend"
+}
