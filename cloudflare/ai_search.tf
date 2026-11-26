@@ -12,10 +12,9 @@ resource "cloudflare_ai_search_namespace" "default" {
   name       = "default"
 
   public_endpoint_params = {
-    enabled                = false
-    default_domain_enabled = true
-    custom_domains         = []
-    instances_allowed      = []
+    enabled = false
+    # 以下の2つは省略すると、API側に残っている値を消す差分が出る。
+    custom_domains = []
     rate_limit = {
       requests  = 100
       period_ms = 60000
@@ -50,8 +49,11 @@ resource "cloudflare_ai_search_instance" "search_for_agents" {
   namespace  = cloudflare_ai_search_namespace.default.name
   id         = "search-for-agents-${var.zone_id}"
 
-  type   = "web-crawler"
   source = "https://ncaq.net"
+
+  # 既定値のままの属性は基本的に書かない。
+  # `source_params`と`indexing_options`は既定値のままだが、
+  # 省略すると中身の変わらない更新がplanに出て紐付けを消すので書いている。
   source_params = {
     web_crawler = {
       parse_type = "discover"
@@ -61,32 +63,13 @@ resource "cloudflare_ai_search_instance" "search_for_agents" {
       }
     }
   }
-  sync_interval = 86400
 
-  embedding_model = "@cf/qwen/qwen3-embedding-0.6b"
-  chunk_size      = 1024
-  chunk_overlap   = 10
-  index_method = {
-    vector  = true
-    keyword = true
-  }
   indexing_options = {
     keyword_tokenizer = "porter"
     use_ocr           = true
   }
 
-  fusion_method = "rrf"
-  retrieval_options = {
-    keyword_match_mode = "and"
-  }
-  rewrite_query   = false
-  reranking       = true
-  score_threshold = 0.4
-  max_num_results = 10
-
-  cache           = true
-  cache_threshold = "close_enough"
-  cache_ttl       = 172800
+  reranking = true
 
   # 省略するとnullが送られて、APIに`expected object, received null`で拒否される。
   # 空で送ることになるので、上に書いた通り紐付けが消える。
