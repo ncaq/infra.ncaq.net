@@ -33,6 +33,8 @@ locals {
     pseudo_ipv4               = "off"
     replace_insecure_js       = "on"
     rocket_loader             = "off"
+    # オンにするとAI Searchのインスタンスが自動作成される。詳細は`ai_search.tf`を参照。
+    search_for_agents = "on"
     # HSTS Preloadの申請条件であるmax-age 1年以上、includeSubDomains、preloadを満たします。
     # 条件を満たさなくなるとリストから外されるので、値を下げる時は注意してください。
     security_header = {
