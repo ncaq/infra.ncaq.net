@@ -4,6 +4,7 @@ locals {
     butterfly   = "butterfly.border-saurolophus.ts.net"
     creep       = "creep.border-saurolophus.ts.net"
     lacquer     = "lacquer.border-saurolophus.ts.net"
+    muse        = "muse.border-saurolophus.ts.net"
     paint       = "paint.border-saurolophus.ts.net"
     seminar     = "seminar.border-saurolophus.ts.net"
     ssd0086     = "ssd0086.border-saurolophus.ts.net"
